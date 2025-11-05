@@ -15,18 +15,18 @@
 	let { children }: Props = $props();
 	const navigation = [
 		{
-			title: 'Profile',
+			title: '个人资料',
 			href: '/my/settings/profile',
 			icon: 'mdi:account'
 		},
 		{
-			title: 'Account',
+			title: '账户设置',
 			href: '/my/settings/account',
 			icon: 'mdi:settings'
 		},
 
 		{
-			title: 'Security',
+			title: '安全设置',
 			href: '/my/settings/security',
 			icon: 'material-symbols:lock-outline'
 		}

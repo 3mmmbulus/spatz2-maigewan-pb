@@ -16,28 +16,28 @@
 	// Menu items
 	const user = [
 		{
-			title: 'Notifications',
+			title: '通知',
 			url: `/notifications/${$currentUser.id}`,
 			icon: 'material-symbols:notifications'
 		},
-		{ title: 'Profile', url: '/my/settings/profile', icon: 'mdi:account' },
-		{ title: 'Account', url: '/my/settings/account', icon: 'mdi:settings' },
-		{ title: 'Security', url: '/my/settings/security', icon: 'material-symbols:lock-outline' }
+		{ title: '个人资料', url: '/my/settings/profile', icon: 'mdi:account' },
+		{ title: '账户设置', url: '/my/settings/account', icon: 'mdi:settings' },
+		{ title: '安全设置', url: '/my/settings/security', icon: 'material-symbols:lock-outline' }
 	];
 
 	const app = [
-		{ title: 'Guestbook', url: '/guestbook', icon: 'ion:chatbox-outline' },
-		{ title: 'User Directory', url: '/users', icon: 'mdi:account-group-outline' },
-		{ title: 'AI Agent', url: '/ai/agent', icon: 'tabler:brain' },
-		{ title: 'Bitcoin Predition', url: '/bitcoin-prediction', icon: 'akar-icons:bitcoin-fill' },
-		{ title: 'PocketBase', url: PUBLIC_POCKETBASE_ADMIN, icon: 'tabler:brain' }
+		{ title: '留言本', url: '/guestbook', icon: 'ion:chatbox-outline' },
+		{ title: '用户目录', url: '/users', icon: 'mdi:account-group-outline' },
+		{ title: 'AI 助手', url: '/ai/agent', icon: 'tabler:brain' },
+		{ title: '比特币预测', url: '/bitcoin-prediction', icon: 'akar-icons:bitcoin-fill' },
+		{ title: '数据库管理', url: PUBLIC_POCKETBASE_ADMIN, icon: 'tabler:brain' }
 	];
 
 	const repo = [
-		{ title: 'Repository', url: PUBLIC_REPOSITORY_URL, icon: 'mdi:github' },
-		{ title: 'Submit Bug', url: `${PUBLIC_REPOSITORY_URL}/issues/new/choose/`, icon: 'mdi:bug' },
-		{ title: 'Docs', url: `${PUBLIC_REPOSITORY_URL}/blob/main/README.md`, icon: 'mdi:github' },
-		{ title: 'Contact', url: '/contact', icon: 'material-symbols:android-contacts' }
+		{ title: '代码仓库', url: PUBLIC_REPOSITORY_URL, icon: 'mdi:github' },
+		{ title: '反馈问题', url: `${PUBLIC_REPOSITORY_URL}/issues/new/choose/`, icon: 'mdi:bug' },
+		{ title: '使用文档', url: `${PUBLIC_REPOSITORY_URL}/blob/main/README.md`, icon: 'mdi:github' },
+		{ title: '联系我们', url: '/contact', icon: 'material-symbols:android-contacts' }
 	];
 
 	// Helper function to apply active class
@@ -107,7 +107,7 @@
 
 	<Sidebar.Content>
 		<Sidebar.Group>
-			<Sidebar.GroupLabel>User</Sidebar.GroupLabel>
+			<Sidebar.GroupLabel>用户</Sidebar.GroupLabel>
 			<Sidebar.GroupContent>
 				<Sidebar.Menu>
 					{#each user as item (item.title)}
@@ -122,7 +122,7 @@
 									>
 										<Icon icon={item.icon} class="" />
 										<span>{item.title}</span>
-										{#if item.title === 'Notifications'}
+										{#if item.title === '通知'}
 											<Badge
 												size="sm"
 												variant="destructive"
@@ -141,7 +141,7 @@
 		</Sidebar.Group>
 
 		<Sidebar.Group>
-			<Sidebar.GroupLabel>Application</Sidebar.GroupLabel>
+			<Sidebar.GroupLabel>应用</Sidebar.GroupLabel>
 			<Sidebar.GroupContent>
 				<Sidebar.Menu>
 					{#each app as item (item.title)}
@@ -166,7 +166,7 @@
 		</Sidebar.Group>
 
 		<Sidebar.Group>
-			<Sidebar.GroupLabel>Repo</Sidebar.GroupLabel>
+			<Sidebar.GroupLabel>项目</Sidebar.GroupLabel>
 			<Sidebar.GroupContent>
 				<Sidebar.Menu>
 					{#each repo as item (item.title)}
@@ -196,7 +196,7 @@
 			<form class="flex w-full py-2" method="POST" action="/auth/logout" aria-label="Logout">
 				<button type="submit" class="flex w-full items-center">
 					<Icon icon="mdi:logout" class="mr-2 h-4 w-4" />
-					<span>Logout</span>
+					<span>退出登录</span>
 				</button>
 			</form>
 		</div>

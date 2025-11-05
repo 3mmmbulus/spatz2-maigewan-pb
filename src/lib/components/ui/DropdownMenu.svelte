@@ -102,7 +102,7 @@
 					class="flex w-full items-center"
 				>
 					<Icon icon="mdi:account" class="mr-2 h-4 w-4" />
-					<span>Profile</span>
+					<span>个人资料</span>
 				</a>
 				<!-- <DropdownMenu.Shortcut>⇧⌘P</DropdownMenu.Shortcut> -->
 			</DropdownMenu.Item>
@@ -113,7 +113,7 @@
 					class="flex w-full items-center"
 				>
 					<Icon icon="mdi:settings" class="mr-2 h-4 w-4" />
-					<span>Account</span>
+					<span>账户设置</span>
 				</a>
 				<!-- <DropdownMenu.Shortcut>⌘S</DropdownMenu.Shortcut> -->
 			</DropdownMenu.Item>
@@ -125,7 +125,7 @@
 					class="flex w-full items-center"
 				>
 					<Icon icon="material-symbols:lock-outline" class="mr-2 h-4 w-4" />
-					<span>Security</span>
+					<span>安全设置</span>
 				</a>
 				<!-- <DropdownMenu.Shortcut>⌘B</DropdownMenu.Shortcut> -->
 			</DropdownMenu.Item>
@@ -148,28 +148,28 @@
 					class="flex w-full w-full items-center"
 				>
 					<Icon icon="ion:chatbubble-outline" class="mr-2 h-4 w-4" />
-					<span>Guestbook</span>
+					<span>留言本</span>
 				</a>
 			</DropdownMenu.Item>
 
 			<DropdownMenu.Item>
 				<a href={`/users`} class="flex w-full w-full items-center">
 					<Icon icon="mdi:users" class="mr-2 h-4 w-4" />
-					<span>User Directory</span>
+					<span>用户目录</span>
 				</a>
 			</DropdownMenu.Item>
 
 			<DropdownMenu.Item>
 				<a href="/ai" data-sveltekit-preload-data="hover" class="flex w-full w-full items-center">
 					<Icon icon="tabler:brain" class="mr-2 h-4 w-4" />
-					<span>AI</span>
+					<span>AI 助手</span>
 				</a>
 			</DropdownMenu.Item>
 
 			<DropdownMenu.Item>
 				<a href={PUBLIC_POCKETBASE_ADMIN} class="flex w-full w-full items-center">
 					<Icon icon="simple-icons:pocketbase" class="mr-2 h-4 w-4" />
-					<span>PocketBase</span>
+					<span>数据库管理</span>
 				</a>
 			</DropdownMenu.Item>
 		</DropdownMenu.Group>
@@ -183,7 +183,7 @@
 				class="flex w-full items-center"
 			>
 				<Icon icon="mdi:github" class="mr-2 h-4 w-4" />
-				<span>Repository</span>
+				<span>代码仓库</span>
 			</a>
 		</DropdownMenu.Item>
 		<DropdownMenu.Item>
@@ -193,7 +193,7 @@
 				class="flex w-full items-center"
 			>
 				<Icon icon="mdi:bug" class="mr-2 h-4 w-4" />
-				<span>Submit Bug</span>
+				<span>反馈问题</span>
 			</a>
 		</DropdownMenu.Item>
 
@@ -204,7 +204,7 @@
 				class="flex w-full items-center"
 			>
 				<Icon icon="mdi:book-open-variant" class="mr-2 h-4 w-4" />
-				<span>Docs</span>
+				<span>使用文档</span>
 			</a>
 		</DropdownMenu.Item>
 		<DropdownMenu.Separator />
@@ -212,7 +212,7 @@
 			<form class="flex w-full py-2" method="POST" action="/auth/logout" aria-label="Logout">
 				<button type="submit" class="flex w-full items-center">
 					<Icon icon="mdi:logout" class="mr-2 h-4 w-4" />
-					<span>Logout</span>
+					<span>退出登录</span>
 				</button>
 			</form>
 		</DropdownMenu.Item>
