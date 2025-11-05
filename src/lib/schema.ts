@@ -18,31 +18,31 @@ const imageTypes = [
 export const registerUserSchema = z
 	.object({
 		email: z
-			.string({ required_error: 'Email is required' })
-			.email({ message: 'Email must be a valid email' }),
+			.string({ required_error: '邮箱为必填项' })
+			.email({ message: '请输入有效的邮箱地址' }),
 		password: z
-			.string({ required_error: 'Password is required' })
+			.string({ required_error: '密码为必填项' })
 			.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
 				message:
-					'Password must be a minimum of 8 characters & contain at least one letter, one number, and one special character.'
+					'密码至少需要8个字符,且必须包含至少一个字母、一个数字和一个特殊字符。'
 			}),
 		passwordConfirm: z
-			.string({ required_error: 'Confirm Password is required' })
+			.string({ required_error: '确认密码为必填项' })
 			.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
 				message:
-					'Password must be a minimum of 8 characters & contain at least one letter, one number, and one special character.'
+					'密码至少需要8个字符,且必须包含至少一个字母、一个数字和一个特殊字符。'
 			})
 	})
 	.superRefine(({ passwordConfirm, password }, ctx) => {
 		if (passwordConfirm !== password) {
 			ctx.addIssue({
 				code: z.ZodIssueCode.custom,
-				message: 'Password & Confirm password must match',
+				message: '两次输入的密码必须一致',
 				path: ['password']
 			});
 			ctx.addIssue({
 				code: z.ZodIssueCode.custom,
-				message: 'Password & Confirm password must match',
+				message: '两次输入的密码必须一致',
 				path: ['passwordConfirm']
 			});
 		}
@@ -55,9 +55,9 @@ export type RegisterUserSchema = typeof registerUserSchema;
 // ------------------------------
 export const loginUserSchema = z.object({
 	email: z
-		.string({ required_error: 'Email is required' })
-		.email({ message: 'Email must be a valid email.' }),
-	password: z.string({ required_error: 'Password is required' })
+		.string({ required_error: '邮箱为必填项' })
+		.email({ message: '请输入有效的邮箱地址' }),
+	password: z.string({ required_error: '密码为必填项' })
 });
 
 export type LoginUserSchema = typeof loginUserSchema;
@@ -67,30 +67,30 @@ export type LoginUserSchema = typeof loginUserSchema;
 // ------------------------------
 export const updatePasswordSchema = z
 	.object({
-		oldPassword: z.string({ required_error: 'Old password is required' }),
+		oldPassword: z.string({ required_error: '当前密码为必填项' }),
 		password: z
-			.string({ required_error: 'Password is required' })
+			.string({ required_error: '新密码为必填项' })
 			.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
 				message:
-					'Password must be a minimum of 8 characters & contain at least one letter, one number, and one special character.'
+					'密码至少需要8个字符,且必须包含至少一个字母、一个数字和一个特殊字符。'
 			}),
 		passwordConfirm: z
-			.string({ required_error: 'Confirm Password is required' })
+			.string({ required_error: '确认新密码为必填项' })
 			.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
 				message:
-					'Password must be a minimum of 8 characters & contain at least one letter, one number, and one special character.'
+					'密码至少需要8个字符,且必须包含至少一个字母、一个数字和一个特殊字符。'
 			})
 	})
 	.superRefine(({ passwordConfirm, password }, ctx) => {
 		if (passwordConfirm !== password) {
 			ctx.addIssue({
 				code: z.ZodIssueCode.custom,
-				message: 'Password & Confirm password must match',
+				message: '两次输入的密码必须一致',
 				path: ['password']
 			});
 			ctx.addIssue({
 				code: z.ZodIssueCode.custom,
-				message: 'Password & Confirm password must match',
+				message: '两次输入的密码必须一致',
 				path: ['passwordConfirm']
 			});
 		}

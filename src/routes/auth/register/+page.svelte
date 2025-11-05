@@ -85,10 +85,10 @@
 </script>
 
 <svelte:head>
-	<title>Contact : {siteInfo.name}</title>
+	<title>注册 : {siteInfo.name}</title>
 	<meta
 		name="description"
-		content={`Contact us for more information about our services. We are dedicated to providing top-notch services to our clients.`}
+		content={`注册 ${siteInfo.name} 账户,管理您的网站授权信息。`}
 	/>
 </svelte:head>
 <div
@@ -98,7 +98,7 @@
 		<div class="w-full max-w-xs">
 			<div class="contact-header flex flex-col items-start gap-2">
 				<div class="flex w-full items-center justify-center gap-5">
-					<div class="text-5xl font-bold lowercase">Register</div>
+					<div class="text-5xl font-bold">注册</div>
 					<Icon icon="material-symbols:login" class="contact-title-icon text-5xl" />
 				</div>
 			</div>
@@ -117,14 +117,14 @@
 				return async ({ result, update }) => {
 					// console.log('Registration result:', result);
 					if (result.type === 'redirect' && result.location === '/auth/login') {
-						toast.success('Registration Successful!', {
-							description: 'You can now log in with your new account.'
+						toast.success('注册成功!', {
+							description: '现在您可以使用新账户登录了。'
 						});
 					}
 
 					// else {
-					// 	toast.error('Failed to Submit Form', {
-					// 		description: 'Please check your input and try again.'
+					// 	toast.error('提交失败', {
+					// 		description: '请检查您的输入后重试。'
 					// 	});
 					// }
 
@@ -135,7 +135,7 @@
 		>
 			<Form.Field {form} name="email">
 				<Form.Control let:attrs>
-					<Form.Label>Email</Form.Label>
+					<Form.Label>邮箱</Form.Label>
 					<Input {...attrs} bind:value={$formData.email} />
 				</Form.Control>
 				<Form.FieldErrors />
@@ -143,7 +143,7 @@
 
 			<Form.Field {form} name="password">
 				<Form.Control let:attrs>
-					<Form.Label>Password</Form.Label>
+					<Form.Label>密码</Form.Label>
 					<Input {...attrs} type="password" bind:value={$formData.password} />
 				</Form.Control>
 				<Form.FieldErrors />
@@ -151,7 +151,7 @@
 
 			<Form.Field {form} name="passwordConfirm">
 				<Form.Control let:attrs>
-					<Form.Label>Confirm Password</Form.Label>
+					<Form.Label>确认密码</Form.Label>
 					<Input {...attrs} type="password" bind:value={$formData.passwordConfirm} />
 				</Form.Control>
 				<Form.FieldErrors />
@@ -165,14 +165,14 @@
 					>
 						<Icon icon="material-symbols:encrypted" class="h-10 w-10 text-primary" />
 						<div class="text-left">
-							Your password will be encrypted for your safety, it will not be readable by anyone.
+							您的密码将被加密保护,任何人都无法读取。
 						</div>
 					</div>
 				{/if}
 
 				<Form.Button disabled={isSubmitting} size="lg" class="group/sendButton w-full">
 					<div class="flex items-center gap-2">
-						<div class="lowercase">register</div>
+						<div>注册</div>
 						<Icon
 							icon={`${isSubmitting ? 'mingcute:loading-fill' : 'mdi:plus'}`}
 							class={`${isSubmitting ? 'animate-spin' : ''} h-5 w-5 transition-transform duration-300 lg:group-hover/sendButton:rotate-90`}
@@ -182,9 +182,9 @@
 			</div>
 
 			<p class="mt-5 text-center text-sm text-muted-foreground">
-				Already have an account? <a
+				已有账户? <a
 					href="/auth/login"
-					class="underline underline-offset-4 hover:text-primary">Login</a
+					class="underline underline-offset-4 hover:text-primary">登录</a
 				>
 			</p>
 		</form>

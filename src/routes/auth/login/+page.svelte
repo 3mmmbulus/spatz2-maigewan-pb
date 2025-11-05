@@ -86,10 +86,10 @@
 </script>
 
 <svelte:head>
-	<title>Contact : {siteInfo.name}</title>
+	<title>登录 : {siteInfo.name}</title>
 	<meta
 		name="description"
-		content={`Contact us for more information about our services. We are dedicated to providing top-notch services to our clients.`}
+		content={`登录 ${siteInfo.name},管理您的网站授权信息。`}
 	/>
 </svelte:head>
 
@@ -100,7 +100,7 @@
 		<div class="w-full max-w-xs">
 			<div class="contact-header flex flex-col items-start gap-2">
 				<div class="flex w-full items-center justify-center gap-5">
-					<div class="text-5xl font-bold lowercase">Login</div>
+					<div class="text-5xl font-bold">登录</div>
 					<Icon icon="material-symbols:login" class="contact-title-icon text-5xl" />
 				</div>
 			</div>
@@ -119,10 +119,10 @@
 				return async ({ result, update }) => {
 					// console.log('Login result:', result);
 					if (result.type === 'redirect' && result.location === '/') {
-						toast.success('Login Successful', {});
+						toast.success('登录成功', {});
 					} else {
-						toast('Failed to Login', {
-							description: 'Please check your input and try again.'
+						toast('登录失败', {
+							description: '请检查您的邮箱和密码后重试。'
 						});
 					}
 
@@ -133,7 +133,7 @@
 		>
 			<Form.Field {form} name="email">
 				<Form.Control let:attrs>
-					<Form.Label>Email</Form.Label>
+					<Form.Label>邮箱</Form.Label>
 					<Input {...attrs} bind:value={$formData.email} />
 				</Form.Control>
 				<Form.FieldErrors />
@@ -141,18 +141,18 @@
 
 			<Form.Field {form} name="password">
 				<Form.Control let:attrs>
-					<Form.Label>Password</Form.Label>
+					<Form.Label>密码</Form.Label>
 					<Input {...attrs} type="password" bind:value={$formData.password} />
 				</Form.Control>
 				<Form.FieldErrors />
 			</Form.Field>
 
 			<div class="mt-5">
-				<a href="/auth/reset-password">forgot password?</a>
+				<a href="/auth/reset-password">忘记密码?</a>
 
 				<Form.Button disabled={isSubmitting} size="lg" class="group/sendButton mt-2 w-full">
 					<div class="flex items-center gap-2">
-						<div class="lowercase">login</div>
+						<div>登录</div>
 						<Icon
 							icon={`${isSubmitting ? 'mingcute:loading-fill' : 'material-symbols:login'}`}
 							class={`${isSubmitting ? 'animate-spin' : ''} h-5 w-5 transition-transform duration-300 lg:group-hover/sendButton:translate-x-1`}
@@ -162,9 +162,9 @@
 			</div>
 
 			<p class="mt-5 text-center text-sm text-muted-foreground">
-				Don't have an account? <a
+				还没有账户? <a
 					href="/auth/register"
-					class="underline underline-offset-4 hover:text-primary">Register</a
+					class="underline underline-offset-4 hover:text-primary">注册</a
 				>
 			</p>
 		</form>

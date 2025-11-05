@@ -52,7 +52,7 @@
 				icon="mdi:arrow-left"
 				class="h-5 w-5 transition-all duration-300 md:group-hover/backButton:-translate-x-1"
 			/>
-			<span class="text-sm">back</span>
+			<span class="text-sm">返回</span>
 		</Button>
 	</div>
 
@@ -60,11 +60,11 @@
 		class={`${sidebar.state === 'expanded' ? 'lg:border lg:p-5' : 'md:border md:p-5'} animate-item mx-auto max-w-2xl rounded-lg md:mt-5`}
 	>
 		{#if data.notifications.length > 0}
-			<div class="animate-item text-6xl">notifications</div>
+			<div class="animate-item text-6xl">通知</div>
 
 			<div class="animate-item mt-5 flex items-center justify-between gap-2 pb-2">
 				<div class="text-xl font-thin">
-					<span class="text-muted-foreground">new notifications:</span>
+					<span class="text-muted-foreground">新通知:</span>
 					{data.notifications.length}
 				</div>
 
@@ -79,21 +79,20 @@
 										onclick={() => (dialogOpen = true)}
 										class="group/deleteButton transition-scale flex scale-[0.80] items-center gap-2 duration-300 active:scale-[0.78]"
 									>
-										<div>clear all</div>
+										<div>清空全部</div>
 										<Icon
 											icon={'mdi:trash'}
 											class={`h-5 w-5 transition-all duration-200 group-hover/deleteButton:scale-110 ${deleteLoading ? 'animate-deletePost' : ''}`}
 										/>
-										<span class="sr-only">Delete</span>
+										<span class="sr-only">删除</span>
 									</Button>
 								</div>
 							</Dialog.Trigger>
 							<Dialog.Content>
 								<Dialog.Header>
-									<Dialog.Title>Are you sure?</Dialog.Title>
+									<Dialog.Title>确认删除？</Dialog.Title>
 									<Dialog.Description>
-										Are you sure you want to delete ALL your notifications? This action cannot be
-										undone.
+										您确定要删除所有通知吗？此操作无法撤销。
 										<form
 											use:enhance={({ cancel }) => {
 												if (isDeleting) return cancel(); // Prevent multiple submissions
@@ -102,9 +101,9 @@
 												return async ({ result, update }) => {
 													console.log('THIS IS RESULT', result);
 													if (result.type === 'success') {
-														toast('Notifications deleted successfully.', {});
+														toast('通知已成功删除。', {});
 													} else {
-														toast.error('Failed to delete notifications.', {});
+														toast.error('删除通知失败。', {});
 													}
 
 													await update();
@@ -118,14 +117,14 @@
 										>
 											<div class="mt-5 flex items-center justify-between gap-2">
 												<Button type="submit" variant="destructive" class="w-full text-white"
-													>delete</Button
+													>删除</Button
 												>
 
 												<Button
 													variant="default"
 													type="button"
 													onclick={() => (dialogOpen = false)}
-													class="w-full">cancel</Button
+													class="w-full">取消</Button
 												>
 											</div>
 										</form>
@@ -165,7 +164,7 @@
 			</div>
 		{:else}
 			<div class="animate-item mt-10 border-b pb-2 text-xl font-thin md:mt-20">
-				{$currentUser.username} has no notifications.
+				{$currentUser.username} 暂无通知。
 			</div>
 		{/if}
 	</main>

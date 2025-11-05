@@ -18,17 +18,17 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 				filter: `author = "${id}"`,
 				sort: '-created',
 				autoCancel: false
-			}),
+			}).catch(() => []), // Return empty array if fails
 			locals.pb.collection('users').getFullList({
 				filter: `following ~ "${id}"`,
 				autoCancel: false
-			}),
+			}).catch(() => []), // Return empty array if fails
 			locals.pb.collection('notifications').getFullList({
 				filter: `user = "${id}"`,
 				sort: '-created',
 				autoCancel: false,
 				expand: 'commentId,referencedUser'
-			})
+			}).catch(() => []) // Return empty array if fails
 		]);
 
 		// Transform posts by adding username and avatar
@@ -55,7 +55,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 			notifications: transformedNotifications
 		};
 	} catch (err) {
-		console.error('Error loading data:', err);
+		console.error('Error loading notification page data:', err);
 		throw error(500, 'Failed to load user profile data');
 	}
 };

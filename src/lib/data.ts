@@ -3,7 +3,7 @@
 
 
 export const siteInfo = {
-	name: "spatz2",
+	name: "Maigewan CMS",
 	email: "engage_intellect@protonmail.com",
 }
 
