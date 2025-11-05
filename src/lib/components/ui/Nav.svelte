@@ -40,10 +40,10 @@
 			{:else}
 				<div class="flex items-center gap-2">
 					<a href="/auth/login">
-						<Button variant="ghost">login</Button>
+						<Button variant="ghost">登录</Button>
 					</a>
 					<a href="/auth/register">
-						<Button variant="ghost">register</Button>
+						<Button variant="ghost">注册</Button>
 					</a>
 				</div>
 			{/if}
