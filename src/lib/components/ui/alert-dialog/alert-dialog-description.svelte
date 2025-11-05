@@ -2,15 +2,16 @@
 	import { AlertDialog as AlertDialogPrimitive } from "bits-ui";
 	import { cn } from "$lib/utils.js";
 
-	type $$Props = AlertDialogPrimitive.DescriptionProps;
+	interface Props extends AlertDialogPrimitive.DescriptionProps {
+		children?: import('svelte').Snippet;
+	}
 
-	let className: $$Props["class"] = undefined;
-	export { className as class };
+	let { children, class: className, ...restProps }: Props = $props();
 </script>
 
 <AlertDialogPrimitive.Description
 	class={cn("text-muted-foreground text-sm", className)}
-	{...$$restProps}
+	{...restProps}
 >
-	<slot />
+	{@render children?.()}
 </AlertDialogPrimitive.Description>
