@@ -158,7 +158,7 @@ onDestroy(() => {
 			icon="mdi:arrow-left"
 			class="h-5 w-5 transition-all duration-300 md:group-hover/backButton:-translate-x-1"
 		/>
-		<span class="text-sm">back</span>
+		<span class="text-sm">返回</span>
 	</Button>
 
 	<div
@@ -166,8 +166,8 @@ onDestroy(() => {
 	>
 		<div class="bg-base-100 mx-auto h-full w-full">
 			<h1 class="flex items-center gap-2 text-6xl font-bold text-primary">
-				<span class="animate-user">user</span>
-				<span class="animate-db font-thin text-primary/50">db</span>
+				<span class="animate-user">用户</span>
+				<span class="animate-db font-thin text-primary/50">列表</span>
 			</h1>
 		</div>
 
@@ -180,7 +180,7 @@ onDestroy(() => {
 				<Input
 					type="text"
 					class="border-none p-2 outline-none focus-visible:shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
-					placeholder="Search users by username..."
+					placeholder="搜索用户名..."
 					bind:value={filter}
 				/>
 			</div>
@@ -188,7 +188,7 @@ onDestroy(() => {
 			<div class=" flex items-center justify-between border-b pb-2 text-xl font-thin">
 				<!-- Display the total count of filtered users -->
 				<div class="text-muted-foreground">
-					{filter ? 'query matches' : 'total users'}:
+					{filter ? '匹配结果' : '总用户数'}:
 					<span class="text-foreground">{filteredUsers.length}</span>
 				</div>
 
@@ -199,7 +199,7 @@ onDestroy(() => {
 						onclick={() => (sortOption = 'all')}
 						class="flex items-center gap-2 text-xs transition-all duration-300"
 					>
-						<div>all</div>
+						<div>全部</div>
 						<Icon
 							icon="material-symbols:background-grid-small"
 							class={`${sortOption === 'all' ? 'text-success' : ''} h-4 w-4`}
@@ -212,7 +212,7 @@ onDestroy(() => {
 						onclick={() => (sortOption = 'following')}
 						class="flex items-center gap-2 text-xs transition-all duration-300"
 					>
-						<div>following</div>
+						<div>关注中</div>
 						<Icon
 							icon="mingcute:user-follow-fill"
 							class={`${sortOption === 'following' ? 'text-info' : ''} h-4 w-4`}
@@ -243,7 +243,7 @@ onDestroy(() => {
 							<div class="flex flex-col truncate">
 								<h1 class="truncate whitespace-nowrap text-sm">{user.username.slice(0, 24)}</h1>
 								<h1 class="mt-1 truncate whitespace-nowrap text-[0.75rem] text-muted-foreground">
-									joined {timeSince(formatFriendlyDate(user.created))}
+									加入于 {timeSince(formatFriendlyDate(user.created))}
 								</h1>
 							</div>
 						</div>

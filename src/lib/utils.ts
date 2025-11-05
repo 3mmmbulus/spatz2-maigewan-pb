@@ -84,7 +84,7 @@ export function timeSince(dateString: string): string {
 	// Handle invalid date cases
 	if (isNaN(date.getTime())) {
 		console.error(`Invalid date in timeSince: ${dateString}`);
-		return 'Invalid Date';
+		return '无效日期';
 	}
 
 	const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
@@ -99,25 +99,25 @@ export function timeSince(dateString: string): string {
 	};
 
 	if (seconds < intervals.minute) {
-		return 'just now';
+		return '刚刚';
 	} else if (seconds < intervals.hour) {
 		const minutes = Math.floor(seconds / intervals.minute);
-		return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+		return `${minutes}分钟前`;
 	} else if (seconds < intervals.day) {
 		const hours = Math.floor(seconds / intervals.hour);
-		return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+		return `${hours}小时前`;
 	} else if (seconds < intervals.week) {
 		const days = Math.floor(seconds / intervals.day);
-		return `${days} day${days !== 1 ? 's' : ''} ago`;
+		return `${days}天前`;
 	} else if (seconds < intervals.month) {
 		const weeks = Math.floor(seconds / intervals.week);
-		return `${weeks} week${weeks !== 1 ? 's' : ''} ago`;
+		return `${weeks}周前`;
 	} else if (seconds < intervals.year) {
 		const months = Math.floor(seconds / intervals.month);
-		return `${months} month${months !== 1 ? 's' : ''} ago`;
+		return `${months}个月前`;
 	} else {
 		const years = Math.floor(seconds / intervals.year);
-		return `${years} year${years !== 1 ? 's' : ''} ago`;
+		return `${years}年前`;
 	}
 }
 
