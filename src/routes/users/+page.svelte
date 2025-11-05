@@ -26,6 +26,7 @@
 
 	let filter = $state(''); // Add a filter variable
 	let showScrollToTop = $state(false);
+	let unsubscribe: (() => void) | null = null;
 
 	$effect(() => {
 		$currentUser = data.user;
@@ -120,32 +121,28 @@
 				}
 			);
 
-			document.querySelectorAll('.user-wrapper').forEach((el) => {
-				lazyLoad(el as HTMLElement);
-			});
+		document.querySelectorAll('.user-wrapper').forEach((el) => {
+			lazyLoad(el as HTMLElement);
+		});
+		ScrollTrigger.refresh();
+
+		unsubscribe = page.subscribe(() => {
+			ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
 			ScrollTrigger.refresh();
-
-			const unsubscribe = page.subscribe(() => {
-				ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-				ScrollTrigger.refresh();
-			});
-
-			onDestroy(() => {
-				unsubscribe();
-				ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-				window.removeEventListener('scroll', handleScroll);
-			});
-		}
-	});
-
-	onDestroy(() => {
-		if (typeof window !== 'undefined') {
-			import('gsap/ScrollTrigger').then(({ ScrollTrigger }) => {
-				ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-				window.removeEventListener('scroll', handleScroll);
-			});
-		}
-	});
+		});
+	}
+});	
+onDestroy(() => {
+	if (unsubscribe) {
+		unsubscribe();
+	}
+	if (typeof window !== 'undefined') {
+		import('gsap/ScrollTrigger').then(({ ScrollTrigger }) => {
+			ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+		});
+		window.removeEventListener('scroll', handleScroll);
+	}
+});
 </script>
 
 <ScrollIndicator />
