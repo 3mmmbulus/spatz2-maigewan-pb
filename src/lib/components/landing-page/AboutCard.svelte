@@ -153,13 +153,13 @@
 				class="invisible relative mx-auto flex h-52 w-52 items-center justify-center rounded-lg transition-opacity duration-500 ease-in-out md:h-64 md:w-64"
 				bind:this={imageContainer}
 			>
-				<a href="https://github.com/maigewan" class="">
+				<a href="https://maigewan.com" class="">
 					<img
-						src={`https://github.com/maigewan.png`}
-						alt="@maigewan"
-						class="z-10 h-full w-full rounded-full object-cover object-top shadow transition-shadow duration-300 hover:shadow-lg"
+						src="/logo.svg"
+						alt="Maigewan CMS"
+						class="z-10 h-full w-full object-contain p-4 shadow transition-shadow duration-300 hover:shadow-lg"
 					/>
-					<div class="mt-2 flex w-full justify-center text-2xl font-thin">@maigewan</div>
+					<div class="mt-2 flex w-full justify-center text-2xl font-thin">Maigewan CMS</div>
 				</a>
 			</div>
 		</div>

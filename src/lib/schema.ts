@@ -173,33 +173,33 @@ export type FollowUserSchema = typeof followUserSchema;
 export const formSchema = z.object({
 	firstName: z
 		.string()
-		.min(2, { message: 'Name must be at least 2 characters' })
-		.max(50, { message: 'Name must be at most 50 characters' })
+		.min(2, { message: '名字至少需要2个字符' })
+		.max(50, { message: '名字最多50个字符' })
 		.refine((value) => !filter.isProfane(value), {
-			message: 'First Name contains inappropriate language'
+			message: '名字包含不当内容'
 		}),
 	lastName: z
 		.string()
-		.min(2, { message: 'Name must be at least 2 characters' })
-		.max(50, { message: 'Name must be at most 50 characters' })
+		.min(2, { message: '姓氏至少需要2个字符' })
+		.max(50, { message: '姓氏最多50个字符' })
 		.refine((value) => !filter.isProfane(value), {
-			message: 'Last Name contains inappropriate language'
+			message: '姓氏包含不当内容'
 		}),
-	email: z.string().email({ message: 'Invalid email address' }),
+	email: z.string().email({ message: '请输入有效的邮箱地址' }),
 	type: z
 		.string()
-		.min(2, { message: 'Type must be selected' })
-		.max(50, { message: 'Type must be selected' }),
+		.min(2, { message: '请选择类型' })
+		.max(50, { message: '请选择类型' }),
 	priority: z
 		.string()
-		.min(1, { message: 'Location must be selected' })
-		.max(2, { message: 'Location must be selected' }),
+		.min(1, { message: '请选择优先级' })
+		.max(2, { message: '请选择优先级' }),
 	message: z
 		.string()
-		.min(10, { message: 'Message must be at least 10 characters' })
-		.max(500, { message: 'Message must be at most 500 characters' })
+		.min(10, { message: '留言至少需要10个字符' })
+		.max(500, { message: '留言最多500个字符' })
 		.refine((value) => !filter.isProfane(value), {
-			message: 'Message contains inappropriate language'
+			message: '留言包含不当内容'
 		})
 });
 

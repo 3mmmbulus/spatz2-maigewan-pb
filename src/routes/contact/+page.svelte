@@ -13,10 +13,10 @@
 </script>
 
 <svelte:head>
-	<title>Contact : {siteInfo.name}</title>
+	<title>联系我们 : {siteInfo.name}</title>
 	<meta
 		name="description"
-		content={`Contact us for more information about our services. We are dedicated to providing top-notch services to our clients.`}
+		content="联系我们了解更多关于 Maigewan CMS 的服务信息。我们致力于为客户提供专业的SEO站群优化解决方案。"
 	/>
 </svelte:head>
 <div

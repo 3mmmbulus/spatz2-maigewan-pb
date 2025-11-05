@@ -44,18 +44,18 @@
 </script>
 
 <svelte:head>
-	<title>Services : {siteInfo.name}</title>
-	<meta name="description" content={`${siteInfo.name} services menu.`} />
+	<title>技术栈 : {siteInfo.name}</title>
+	<meta name="description" content={`${siteInfo.name} 使用的技术栈和服务。`} />
 </svelte:head>
 
 <div>
 	<div class="flex items-center justify-between gap-5">
 		<Button onclick={goBack} variant="outline" class="flex items-center gap-2">
 			<Icon icon="mdi:arrow-left" class="" />
-			<div class="lowercase">Back</div>
+			<div>返回</div>
 		</Button>
 
-		<Input bind:value={searchFiler} placeholder="Filter Technologies" class="w-full max-w-lg" />
+		<Input bind:value={searchFiler} placeholder="搜索技术" class="w-full max-w-lg" />
 
 		<!-- <a href={'javascript:history.back()'}>
 			<Button size="lg" variant="outline" class="flex items-center gap-2">

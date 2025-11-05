@@ -30,7 +30,7 @@
 	<div class="w-full max-w-md">
 		<div class="contact-header flex flex-col items-start gap-2">
 			<div class="flex items-center gap-5">
-				<div class="text-5xl font-bold lowercase md:text-7xl">Contact</div>
+				<div class="text-5xl font-bold md:text-7xl">联系我们</div>
 				<Icon
 					icon="material-symbols:android-chat"
 					class="contact-title-icon text-5xl md:text-7xl"
@@ -51,12 +51,12 @@
 
 			return async ({ result }) => {
 				if (result.type === 'success') {
-					toast.success('Form Submitted Successfully!', {
-						description: "We'll get back to you as soon as possible, typically within 24 hours."
+					toast.success('表单提交成功！', {
+						description: '我们会尽快回复您，通常在24小时内。'
 					});
 				} else {
-					toast.error('Failed to Submit Form', {
-						description: 'Please check your input and try again.'
+					toast.error('表单提交失败', {
+						description: '请检查您的输入并重试。'
 					});
 				}
 
@@ -69,14 +69,14 @@
 		<div class="mb-2 flex items-center gap-2 md:gap-5">
 			<Form.Field {form} name="firstName" class="w-full">
 				<Form.Control let:attrs>
-					<Form.Label>First Name</Form.Label>
+					<Form.Label>名字</Form.Label>
 					<Input {...attrs} bind:value={$formData.firstName} />
 				</Form.Control>
 			</Form.Field>
 
 			<Form.Field {form} name="lastName" class="w-full">
 				<Form.Control let:attrs>
-					<Form.Label>Last Name</Form.Label>
+					<Form.Label>姓氏</Form.Label>
 					<Input {...attrs} bind:value={$formData.lastName} />
 				</Form.Control>
 			</Form.Field>
@@ -93,7 +93,7 @@
 
 		<Form.Field {form} name="email">
 			<Form.Control let:attrs>
-				<Form.Label>Email</Form.Label>
+				<Form.Label>邮箱</Form.Label>
 				<Input {...attrs} bind:value={$formData.email} />
 			</Form.Control>
 			<Form.FieldErrors />
@@ -102,13 +102,13 @@
 		<div class="mb-2 flex items-center gap-2 md:gap-5">
 			<Form.Field {form} name={'type'} class="w-full">
 				<Form.Control let:attrs>
-					<Form.Label>Type</Form.Label>
+					<Form.Label>类型</Form.Label>
 					<Select.Root name="type" type="single" bind:value={$formData.type}>
 						<Select.Trigger {...attrs}>
 							{$formData.type}
 						</Select.Trigger>
 						<Select.Content>
-							{#each ['Issue', 'Feedback', 'General Question'] as item}
+							{#each ['问题反馈', '功能建议', '一般咨询'] as item}
 								<Select.Item label={item} value={item}>{item}</Select.Item>
 							{/each}
 						</Select.Content>
@@ -118,7 +118,7 @@
 
 			<Form.Field {form} name={'priority'} class="w-full">
 				<Form.Control let:attrs>
-					<Form.Label>Priority</Form.Label>
+					<Form.Label>优先级</Form.Label>
 					<Select.Root name="priority" type="single" bind:value={$formData.priority}>
 						<Select.Trigger {...attrs}>
 							{$formData.priority}
@@ -145,7 +145,7 @@
 
 		<Form.Field {form} name="message">
 			<Form.Control let:attrs>
-				<Form.Label>Message</Form.Label>
+				<Form.Label>留言</Form.Label>
 				<Textarea {...attrs} bind:value={$formData.message} />
 			</Form.Control>
 			<Form.FieldErrors />
@@ -153,7 +153,7 @@
 
 		<Form.Button disabled={isSubmitting} size="lg" class="group/sendButton mt-5 w-full">
 			<div class="flex items-center gap-2">
-				<div class="lowercase">Send</div>
+				<div>发送</div>
 				<Icon
 					icon={`${isSubmitting ? 'mingcute:loading-fill' : 'mdi:arrow-right'}`}
 					class={`${isSubmitting ? 'animate-spin' : ''} h-5 w-5 transition-transform duration-300 lg:group-hover/sendButton:translate-x-1`}
@@ -162,15 +162,15 @@
 		</Form.Button>
 
 		<p class="mt-5 text-center text-xs text-muted-foreground">
-			By clicking continue, you agree to our
+			点击继续即表示您同意我们的
 			<a href="/terms" class="underline underline-offset-4 hover:text-primary">
-				Terms of Service
+				服务条款
 			</a>
-			and
+			和
 			<a href="/privacy" class="underline underline-offset-4 hover:text-primary">
-				Privacy Policy
+				隐私政策
 			</a>
-			.
+			。
 		</p>
 	</form>
 </div>
