@@ -22,16 +22,10 @@ export const registerUserSchema = z
 			.email({ message: '请输入有效的邮箱地址' }),
 		password: z
 			.string({ required_error: '密码为必填项' })
-			.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
-				message:
-					'密码至少需要8个字符,且必须包含至少一个字母、一个数字和一个特殊字符。'
-			}),
+			.min(6, { message: '密码至少需要6个字符' }),
 		passwordConfirm: z
 			.string({ required_error: '确认密码为必填项' })
-			.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
-				message:
-					'密码至少需要8个字符,且必须包含至少一个字母、一个数字和一个特殊字符。'
-			})
+			.min(6, { message: '密码至少需要6个字符' })
 	})
 	.superRefine(({ passwordConfirm, password }, ctx) => {
 		if (passwordConfirm !== password) {
@@ -70,16 +64,10 @@ export const updatePasswordSchema = z
 		oldPassword: z.string({ required_error: '当前密码为必填项' }),
 		password: z
 			.string({ required_error: '新密码为必填项' })
-			.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
-				message:
-					'密码至少需要8个字符,且必须包含至少一个字母、一个数字和一个特殊字符。'
-			}),
+			.min(6, { message: '密码至少需要6个字符' }),
 		passwordConfirm: z
 			.string({ required_error: '确认新密码为必填项' })
-			.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
-				message:
-					'密码至少需要8个字符,且必须包含至少一个字母、一个数字和一个特殊字符。'
-			})
+			.min(6, { message: '密码至少需要6个字符' })
 	})
 	.superRefine(({ passwordConfirm, password }, ctx) => {
 		if (passwordConfirm !== password) {
