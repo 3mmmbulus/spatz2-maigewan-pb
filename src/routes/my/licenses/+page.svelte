@@ -11,6 +11,9 @@
 	import { gsap } from 'gsap';
 	import ScrollIndicator from '$lib/components/ui/ScrollIndicator.svelte';
 	import ScrollToTopButton from '$lib/components/ui/ScrollToTopButton.svelte';
+	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
+	import { pb } from '$lib/pocketbase';
+	import { toast } from 'svelte-sonner';
 
 	interface Props {
 		data: any;
@@ -23,6 +26,10 @@
 	let filter = $state('');
 	let sortOption = $state('all');
 	let showScrollToTop = $state(false);
+	let copiedId = $state<string | null>(null);
+	let resetDialogOpen = $state(false);
+	let selectedLicense = $state<any>(null);
+	let isResetting = $state(false);
 
 	// 状态颜色映射
 	function getStatusVariant(status: string) {
@@ -59,7 +66,9 @@
 		return date.toLocaleDateString('zh-CN', {
 			year: 'numeric',
 			month: '2-digit',
-			day: '2-digit'
+			day: '2-digit',
+			hour: '2-digit',
+			minute: '2-digit'
 		});
 	}
 
@@ -70,6 +79,54 @@
 		const now = new Date();
 		const daysUntilExpire = Math.floor((expire.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
 		return daysUntilExpire > 0 && daysUntilExpire <= 30;
+	}
+
+	// 复制授权码到剪贴板
+	async function copyLicenseKey(licenseKey: string, licenseId: string) {
+		try {
+			await navigator.clipboard.writeText(licenseKey);
+			copiedId = licenseId;
+			toast.success('授权码已复制到剪贴板');
+			setTimeout(() => {
+				copiedId = null;
+			}, 2000);
+		} catch (err) {
+			toast.error('复制失败，请手动复制');
+		}
+	}
+
+	// 打开重置对话框
+	function openResetDialog(license: any) {
+		selectedLicense = license;
+		resetDialogOpen = true;
+	}
+
+	// 重置设备ID
+	async function resetDeviceId() {
+		if (!selectedLicense) return;
+		
+		isResetting = true;
+		try {
+			await pb.collection('maigewan_licenses').update(selectedLicense.id, {
+				device_id: ''
+			});
+			
+			toast.success('设备ID已重置，您现在可以更换服务器授权');
+			
+			// 更新本地数据
+			const index = data.licenses.findIndex((l: any) => l.id === selectedLicense.id);
+			if (index !== -1) {
+				data.licenses[index].device_id = '';
+			}
+			
+			resetDialogOpen = false;
+			selectedLicense = null;
+		} catch (err: any) {
+			console.error('重置失败:', err);
+			toast.error(err.message || '重置失败，请稍后重试');
+		} finally {
+			isResetting = false;
+		}
 	}
 
 	// 过滤和排序授权
@@ -279,20 +336,34 @@
 			{#if filteredLicenses && filteredLicenses.length > 0}
 				{#each filteredLicenses as license}
 					<div
-						class="license-item border-t p-4 transition-all duration-200 hover:bg-secondary"
+						class="license-item group relative border-t p-4 transition-all duration-200 hover:bg-secondary/50"
 					>
 						<div class="flex items-start justify-between gap-4">
 							<!-- 左侧:授权信息 -->
-							<div class="flex-1 space-y-3">
-								<!-- 标题行 -->
+							<div class="flex-1 space-y-4">
+								<!-- 标题行 - 授权码 -->
 								<div class="flex items-center gap-3">
 									<Icon icon="mdi:key-variant" class="h-6 w-6 text-primary" />
-									<code
-										class="rounded bg-muted px-3 py-1.5 font-mono text-sm text-primary"
-										title={license.license_key}
-									>
-										{license.license_key}
-									</code>
+									<div class="flex items-center gap-2">
+										<code
+											class="rounded bg-muted px-3 py-1.5 font-mono text-sm text-primary"
+											title={license.license_key}
+										>
+											{license.license_key}
+										</code>
+										<Button
+											size="sm"
+											variant="ghost"
+											class="h-8 w-8 p-0 opacity-0 transition-opacity group-hover:opacity-100"
+											onclick={() => copyLicenseKey(license.license_key, license.id)}
+										>
+											{#if copiedId === license.id}
+												<Icon icon="mdi:check" class="h-4 w-4 text-success" />
+											{:else}
+												<Icon icon="mdi:content-copy" class="h-4 w-4" />
+											{/if}
+										</Button>
+									</div>
 									<Badge variant={getStatusVariant(license.status)}>
 										{getStatusText(license.status)}
 									</Badge>
@@ -305,58 +376,77 @@
 								</div>
 
 								<!-- 详细信息网格 -->
-								<div class="grid grid-cols-1 gap-2 text-sm md:grid-cols-2">
-									{#if license.device_id}
-										<div class="flex items-center gap-2 text-muted-foreground">
-											<Icon icon="mdi:devices" class="h-4 w-4" />
-											<span>设备:</span>
-											<span class="text-foreground">{license.device_id}</span>
-										</div>
-									{/if}
+								<div class="grid grid-cols-1 gap-3 text-sm md:grid-cols-2">
+									<!-- 设备ID -->
+									<div class="flex items-center gap-2 text-muted-foreground">
+										<Icon icon="mdi:devices" class="h-4 w-4 flex-shrink-0" />
+										<span class="flex-shrink-0">设备ID:</span>
+										<span class="truncate text-foreground" title={license.device_id || '未绑定'}>
+											{license.device_id || '未绑定'}
+										</span>
+									</div>
 
-									{#if license.expire_date}
-										<div class="flex items-center gap-2 text-muted-foreground">
-											<Icon icon="mdi:calendar-clock" class="h-4 w-4" />
-											<span>过期:</span>
-											<span class="text-foreground">{formatDate(license.expire_date)}</span>
-										</div>
-									{/if}
+									<!-- 过期时间 -->
+									<div class="flex items-center gap-2 text-muted-foreground">
+										<Icon icon="mdi:calendar-clock" class="h-4 w-4 flex-shrink-0" />
+										<span class="flex-shrink-0">到期时间:</span>
+										<span class="text-foreground">
+											{license.expire_date ? formatDate(license.expire_date) : '无限期'}
+										</span>
+									</div>
 
-									{#if license.purchase_date}
-										<div class="flex items-center gap-2 text-muted-foreground">
-											<Icon icon="mdi:cart" class="h-4 w-4" />
-											<span>购买:</span>
-											<span class="text-foreground">{formatDate(license.purchase_date)}</span>
-										</div>
-									{/if}
+									<!-- 购买日期 -->
+									<div class="flex items-center gap-2 text-muted-foreground">
+										<Icon icon="mdi:cart" class="h-4 w-4 flex-shrink-0" />
+										<span class="flex-shrink-0">购买日期:</span>
+										<span class="text-foreground">
+											{license.purchase_date ? formatDate(license.purchase_date) : '未记录'}
+										</span>
+									</div>
 
-									{#if license.first_activated_at}
-										<div class="flex items-center gap-2 text-muted-foreground">
-											<Icon icon="mdi:check-circle" class="h-4 w-4" />
-											<span>激活:</span>
-											<span class="text-foreground">{formatDate(license.first_activated_at)}</span>
-										</div>
-									{/if}
+									<!-- 首次激活时间 -->
+									<div class="flex items-center gap-2 text-muted-foreground">
+										<Icon icon="mdi:check-circle" class="h-4 w-4 flex-shrink-0" />
+										<span class="flex-shrink-0">首次激活:</span>
+										<span class="text-foreground">
+											{license.first_activated_at ? formatDate(license.first_activated_at) : '未激活'}
+										</span>
+									</div>
 
-									{#if license.last_request_at}
-										<div class="flex items-center gap-2 text-muted-foreground">
-											<Icon icon="mdi:clock-outline" class="h-4 w-4" />
-											<span>最后使用:</span>
-											{#if mounted}
-												<span class="text-foreground">{timeSince(formatFriendlyDate(license.last_request_at))}</span>
+									<!-- 首次请求IP -->
+									<div class="flex items-center gap-2 text-muted-foreground">
+										<Icon icon="mdi:ip-network" class="h-4 w-4 flex-shrink-0" />
+										<span class="flex-shrink-0">首次IP:</span>
+										<span class="text-foreground">
+											{license.first_request_ip || '无记录'}
+										</span>
+									</div>
+
+									<!-- 最近请求IP -->
+									<div class="flex items-center gap-2 text-muted-foreground">
+										<Icon icon="mdi:ip" class="h-4 w-4 flex-shrink-0" />
+										<span class="flex-shrink-0">最近IP:</span>
+										<span class="text-foreground">
+											{license.last_request_ip || '无记录'}
+										</span>
+									</div>
+
+									<!-- 最近请求时间 -->
+									<div class="flex items-center gap-2 text-muted-foreground md:col-span-2">
+										<Icon icon="mdi:clock-outline" class="h-4 w-4 flex-shrink-0" />
+										<span class="flex-shrink-0">最近使用:</span>
+										<span class="text-foreground">
+											{#if license.last_request_at}
+												{#if mounted}
+													{timeSince(formatFriendlyDate(license.last_request_at))}
+												{:else}
+													{formatDate(license.last_request_at)}
+												{/if}
 											{:else}
-												<span class="text-foreground">{formatDate(license.last_request_at)}</span>
+												从未使用
 											{/if}
-										</div>
-									{/if}
-
-									{#if license.last_request_ip}
-										<div class="flex items-center gap-2 text-muted-foreground">
-											<Icon icon="mdi:ip" class="h-4 w-4" />
-											<span>IP:</span>
-											<span class="text-foreground">{license.last_request_ip}</span>
-										</div>
-									{/if}
+										</span>
+									</div>
 								</div>
 
 								<!-- 备注 -->
@@ -371,31 +461,46 @@
 								{/if}
 
 								<!-- 底部时间戳 -->
-								<div class="flex items-center gap-4 text-xs text-muted-foreground">
-									<span>
-										创建于
-										{#if mounted}
-											{timeSince(formatFriendlyDate(license.created))}
-										{:else}
-											{formatDate(license.created)}
-										{/if}
-									</span>
-									{#if license.updated !== license.created}
+								<div class="flex items-center gap-4 border-t pt-3 text-xs text-muted-foreground">
+									<div class="flex items-center gap-1">
+										<Icon icon="mdi:clock-plus" class="h-3 w-3" />
 										<span>
-											更新于
+											创建于
 											{#if mounted}
-												{timeSince(formatFriendlyDate(license.updated))}
+												{timeSince(formatFriendlyDate(license.created))}
 											{:else}
-												{formatDate(license.updated)}
+												{formatDate(license.created)}
 											{/if}
 										</span>
+									</div>
+									{#if license.updated !== license.created}
+										<div class="flex items-center gap-1">
+											<Icon icon="mdi:clock-edit" class="h-3 w-3" />
+											<span>
+												更新于
+												{#if mounted}
+													{timeSince(formatFriendlyDate(license.updated))}
+												{:else}
+													{formatDate(license.updated)}
+												{/if}
+											</span>
+										</div>
 									{/if}
 								</div>
 							</div>
 
-							<!-- 右侧:操作按钮 (预留) -->
+							<!-- 右侧:操作按钮 -->
 							<div class="flex flex-col gap-2">
-								<!-- 可以在这里添加操作按钮,如复制、查看详情等 -->
+								<Button
+									size="sm"
+									variant="outline"
+									class="gap-2 whitespace-nowrap"
+									onclick={() => openResetDialog(license)}
+									disabled={!license.device_id}
+								>
+									<Icon icon="mdi:refresh" class="h-4 w-4" />
+									重置设备
+								</Button>
 							</div>
 						</div>
 					</div>
@@ -420,6 +525,57 @@
 		</div>
 	</div>
 </div>
+
+<!-- 重置设备ID确认对话框 -->
+<AlertDialog.Root bind:open={resetDialogOpen}>
+	<AlertDialog.Content>
+		<AlertDialog.Header>
+			<AlertDialog.Title class="flex items-center gap-2">
+				<Icon icon="mdi:alert-circle" class="h-5 w-5 text-orange-500" />
+				确认重置授权码?
+			</AlertDialog.Title>
+			<AlertDialog.Description class="space-y-2">
+				<p>重置后您可以更换服务器授权!</p>
+				{#if selectedLicense}
+					<div class="mt-4 rounded-lg border bg-muted/30 p-3">
+						<div class="mb-2 text-xs text-muted-foreground">当前授权信息:</div>
+						<div class="space-y-1 text-sm">
+							<div class="flex items-center gap-2">
+								<Icon icon="mdi:key-variant" class="h-4 w-4" />
+								<code class="text-xs">{selectedLicense.license_key}</code>
+							</div>
+							{#if selectedLicense.device_id}
+								<div class="flex items-center gap-2">
+									<Icon icon="mdi:devices" class="h-4 w-4" />
+									<span class="text-xs text-muted-foreground">设备: {selectedLicense.device_id}</span>
+								</div>
+							{/if}
+						</div>
+					</div>
+				{/if}
+				<p class="text-xs text-muted-foreground">
+					注意: 重置后原设备将无法继续使用此授权，您需要重新激活。
+				</p>
+			</AlertDialog.Description>
+		</AlertDialog.Header>
+		<AlertDialog.Footer>
+			<AlertDialog.Cancel disabled={isResetting}>取消</AlertDialog.Cancel>
+			<AlertDialog.Action
+				onclick={resetDeviceId}
+				disabled={isResetting}
+				class="bg-orange-500 hover:bg-orange-600"
+			>
+				{#if isResetting}
+					<Icon icon="mdi:loading" class="mr-2 h-4 w-4 animate-spin" />
+					重置中...
+				{:else}
+					<Icon icon="mdi:refresh" class="mr-2 h-4 w-4" />
+					确认重置
+				{/if}
+			</AlertDialog.Action>
+		</AlertDialog.Footer>
+	</AlertDialog.Content>
+</AlertDialog.Root>
 
 {#if showScrollToTop === true}
 	<div class="flex justify-center">
