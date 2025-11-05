@@ -85,10 +85,10 @@
 </script>
 
 <svelte:head>
-	<title>Contact : {siteInfo.name}</title>
+	<title>重置密码 : {siteInfo.name}</title>
 	<meta
 		name="description"
-		content={`Contact us for more information about our services. We are dedicated to providing top-notch services to our clients.`}
+		content="重置您的 Maigewan CMS 账户密码。我们将向您的邮箱发送密码重置链接。"
 	/>
 </svelte:head>
 <div
@@ -98,7 +98,7 @@
 		<div class="w-full max-w-xs">
 			<div class="contact-header flex flex-col items-start gap-2">
 				<div class="flex w-full items-center justify-center gap-5">
-					<div class="text-5xl font-bold lowercase">pw reset</div>
+					<div class="text-5xl font-bold">重置密码</div>
 					<!-- <Icon icon="material-symbols:login" class="contact-title-icon text-5xl" /> -->
 				</div>
 			</div>
@@ -117,12 +117,12 @@
 				return async ({ result, update }) => {
 					// console.log('Reset Password result:', result);
 					if (result.type === 'redirect' && result.location === '/') {
-						toast('Login Successful', {
-							description: "Successfully logged in. You're now redirected to the homepage."
+						toast('重置链接已发送', {
+							description: '请检查您的邮箱,点击链接重置密码。'
 						});
 					} else {
-						toast('Failed to Login', {
-							description: 'Please check your input and try again.'
+						toast('发送失败', {
+							description: '请检查您的邮箱地址是否正确。'
 						});
 					}
 
@@ -133,7 +133,7 @@
 		>
 			<Form.Field {form} name="email">
 				<Form.Control let:attrs>
-					<Form.Label>Email</Form.Label>
+					<Form.Label>邮箱</Form.Label>
 					<Input {...attrs} bind:value={$formData.email} />
 				</Form.Control>
 				<Form.FieldErrors />
@@ -144,7 +144,7 @@
 
 				<Form.Button disabled={isSubmitting} size="lg" class="group/sendButton w-full">
 					<div class="flex items-center gap-2">
-						<div class="lowercase">send reset link</div>
+						<div>发送重置链接</div>
 						<Icon
 							icon={`${isSubmitting ? 'mingcute:loading-fill' : 'mdi:send'}`}
 							class={`${isSubmitting ? 'animate-spin' : ''} h-5 w-5 transition-transform duration-300 lg:group-hover/sendButton:translate-x-1`}
@@ -154,9 +154,9 @@
 			</div>
 
 			<p class="mt-5 text-center text-sm text-muted-foreground">
-				Don't have an account? <a
+				还没有账户? <a
 					href="/auth/register"
-					class="underline underline-offset-4 hover:text-primary">Register</a
+					class="underline underline-offset-4 hover:text-primary">注册</a
 				>
 			</p>
 		</form>

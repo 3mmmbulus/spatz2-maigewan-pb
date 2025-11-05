@@ -116,7 +116,7 @@
 					</div>
 					<div class="mt-3 text-xs font-thin text-muted-foreground">
 						作者: <a
-							href="https://github.com/maigewan"
+							href="https://t.me/maigewan"
 							target="_blank"
 							rel="noopener noreferrer"
 							class="text-foreground underline">@maigewan</a
