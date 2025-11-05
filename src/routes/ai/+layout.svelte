@@ -18,11 +18,6 @@
 
 	const navigation = [
 		{
-			title: 'chat',
-			href: '/ai/chat',
-			icon: 'material-symbols:chat-bubble-rounded'
-		},
-		{
 			title: 'context',
 			href: '/ai/context',
 			icon: 'material-symbols:memory'

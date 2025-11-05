@@ -26,12 +26,6 @@
 		},
 
 		{
-			title: 'Billing',
-			href: '/my/settings/subscription',
-			icon: 'weui:done2-filled'
-		},
-
-		{
 			title: 'Security',
 			href: '/my/settings/security',
 			icon: 'material-symbols:lock-outline'

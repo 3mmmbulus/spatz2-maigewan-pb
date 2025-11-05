@@ -120,18 +120,6 @@
 
 			<DropdownMenu.Item>
 				<a
-					href="/my/settings/subscription"
-					data-sveltekit-preload-data="hover"
-					class="flex w-full items-center"
-				>
-					<Icon icon="weui:done2-filled" class="mr-2 h-4 w-4" />
-					<span>Billing</span>
-				</a>
-				<!-- <DropdownMenu.Shortcut>⌘S</DropdownMenu.Shortcut> -->
-			</DropdownMenu.Item>
-
-			<DropdownMenu.Item>
-				<a
 					href="/my/settings/security"
 					data-sveltekit-preload-data="hover"
 					class="flex w-full items-center"
@@ -184,13 +172,6 @@
 					<span>PocketBase</span>
 				</a>
 			</DropdownMenu.Item>
-
-			<DropdownMenu.Item>
-				<a href={`/subscriptions`} class="flex w-full w-full items-center">
-					<Icon icon="carbon:pricing-container" class="mr-2 h-4 w-4" />
-					<span>Subscriptions</span>
-				</a>
-			</DropdownMenu.Item>
 		</DropdownMenu.Group>
 
 		<DropdownMenu.Separator />
@@ -213,13 +194,6 @@
 			>
 				<Icon icon="mdi:bug" class="mr-2 h-4 w-4" />
 				<span>Submit Bug</span>
-			</a>
-		</DropdownMenu.Item>
-
-		<DropdownMenu.Item>
-			<a href="/donate" class="flex w-full items-center">
-				<Icon icon="mdi:money" class="mr-2 h-4 w-4" />
-				<span>Donate</span>
 			</a>
 		</DropdownMenu.Item>
 

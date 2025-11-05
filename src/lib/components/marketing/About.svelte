@@ -25,7 +25,7 @@
 
 			<div class="flex items-center gap-2">
 				<Icon icon="mdi-done" class="text-success" />
-				<li>Stripe Payments & Subscriptions</li>
+				<li>PocketBase Backend</li>
 			</div>
 
 			<div class="flex items-center gap-2">

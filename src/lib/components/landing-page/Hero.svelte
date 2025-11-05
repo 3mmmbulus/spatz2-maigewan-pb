@@ -107,7 +107,7 @@
 						The ultimate <span class="">"do-everything"</span> template for svelte & sveltekit.
 					</div>
 					<div class="pt-3 text-lg">
-						this time with svelte-animations, superforms, stripe, and shadcn.
+						this time with svelte-animations, superforms, and shadcn.
 					</div>
 					<div class="mt-3 text-xs font-thin text-muted-foreground">
 						an updated version of <a

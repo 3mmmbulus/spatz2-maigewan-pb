@@ -46,13 +46,13 @@
 			</Command.Item>
 
 			<Command.Item onSelect={() => handleSelect('Guestbook', '/guestbook')}>
-				<Icon icon="material-symbols:dynamic-feed" class="mr-2 h-4 w-4" />
+				<Icon icon="ion:chatbox-outline" class="mr-2 h-4 w-4" />
 				<span>Guestbook</span>
 			</Command.Item>
 
-			<Command.Item onSelect={() => handleSelect('Chat', '/ai/chat')}>
+			<Command.Item onSelect={() => handleSelect('AI Agent', '/ai/agent')}>
 				<Icon icon="hugeicons:ai-brain-03" class="mr-2 h-4 w-4" />
-				<span>AI</span>
+				<span>AI Agent</span>
 			</Command.Item>
 
 			<Command.Item

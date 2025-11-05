@@ -48,11 +48,8 @@
 		{#if $currentUser.subscribed}
 			<div class="flex flex-col gap-5">
 				<div class="animate-item animate-item text-lg">
-					You must subscribe to view prediction models
+					Feature temporarily unavailable
 				</div>
-				<Button variant="success" class="animate-item w-fit" href="/subscriptions"
-					>Subscription Plans</Button
-				>
 			</div>
 		{:else}
 			<div class="animate-item flex-flex-col">

@@ -22,23 +22,20 @@
 		},
 		{ title: 'Profile', url: '/my/settings/profile', icon: 'mdi:account' },
 		{ title: 'Account', url: '/my/settings/account', icon: 'mdi:settings' },
-		{ title: 'Billing', url: '/my/settings/subscription', icon: 'weui:done2-filled' },
 		{ title: 'Security', url: '/my/settings/security', icon: 'material-symbols:lock-outline' }
 	];
 
 	const app = [
 		{ title: 'Guestbook', url: '/guestbook', icon: 'ion:chatbox-outline' },
 		{ title: 'User Directory', url: '/users', icon: 'mdi:account-group-outline' },
-		{ title: 'AI', url: '/ai/chat', icon: 'tabler:brain' },
+		{ title: 'AI Agent', url: '/ai/agent', icon: 'tabler:brain' },
 		{ title: 'Bitcoin Predition', url: '/bitcoin-prediction', icon: 'akar-icons:bitcoin-fill' },
-		{ title: 'PocketBase', url: PUBLIC_POCKETBASE_ADMIN, icon: 'tabler:brain' },
-		{ title: 'Subscriptions', url: '/subscriptions', icon: 'carbon:pricing-container' }
+		{ title: 'PocketBase', url: PUBLIC_POCKETBASE_ADMIN, icon: 'tabler:brain' }
 	];
 
 	const repo = [
 		{ title: 'Repository', url: PUBLIC_REPOSITORY_URL, icon: 'mdi:github' },
 		{ title: 'Submit Bug', url: `${PUBLIC_REPOSITORY_URL}/issues/new/choose/`, icon: 'mdi:bug' },
-		{ title: 'Donate', url: '/donate', icon: 'mdi:money' },
 		{ title: 'Docs', url: `${PUBLIC_REPOSITORY_URL}/blob/main/README.md`, icon: 'mdi:github' },
 		{ title: 'Contact', url: '/contact', icon: 'material-symbols:android-contacts' }
 	];
