@@ -158,26 +158,12 @@
 			});
 
 			ScrollTrigger.refresh();
-
-			const unsubscribe = page.subscribe(() => {
-				ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-				ScrollTrigger.refresh();
-			});
-
-			onDestroy(() => {
-				unsubscribe();
-				ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-				window.removeEventListener('scroll', handleScroll);
-			});
 		}
 	});
 
 	onDestroy(() => {
 		if (typeof window !== 'undefined') {
-			import('gsap/ScrollTrigger').then(({ ScrollTrigger }) => {
-				ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-				window.removeEventListener('scroll', handleScroll);
-			});
+			window.removeEventListener('scroll', handleScroll);
 		}
 	});
 </script>

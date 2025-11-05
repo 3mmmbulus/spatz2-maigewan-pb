@@ -44,15 +44,14 @@
 		{#each navigation as navItem}
 			<li class="">
 				<a href={navItem.href} class="text-lg">
-					<Button
-						variant={`${$page.url.pathname === navItem.href ? 'outline' : 'outline'}`}
-						class={`flex w-full items-center justify-between gap-2 ${$page.url.pathname === navItem.href ? 'bg-secondary' : ''}`}
+					<div
+						class={`flex w-full items-center justify-between gap-2 rounded-md border border-input px-3 py-2 ${$page.url.pathname === navItem.href ? 'bg-secondary' : ''}`}
 					>
 						<div>
 							{navItem.title}
 						</div>
 						<Icon icon={navItem.icon} class="h-4 w-4" />
-					</Button>
+					</div>
 				</a>
 			</li>
 		{/each}
