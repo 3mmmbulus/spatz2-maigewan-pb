@@ -26,6 +26,7 @@
 	];
 
 	const app = [
+		{ title: '我的授权', url: '/my/licenses', icon: 'mdi:key-variant' },
 		{ title: '留言本', url: '/guestbook', icon: 'ion:chatbox-outline' },
 		{ title: '用户目录', url: '/users', icon: 'mdi:account-group-outline' },
 		{ title: '比特币预测', url: '/bitcoin-prediction', icon: 'akar-icons:bitcoin-fill' },
