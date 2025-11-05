@@ -95,24 +95,31 @@
 		<div class="flex w-full flex-col rounded-l-lg p-2 md:max-w-lg md:p-10 md:p-5">
 			<div class="mx-auto flex w-full flex-col items-center gap-5">
 				<div
-					class="animate-title w-full text-7xl font-bold lowercase tracking-tight transition-transform duration-300 lg:text-9xl"
+					class="animate-title w-full text-6xl font-bold tracking-tight transition-transform duration-300 lg:text-8xl"
 				>
-					<WordsPullUp class="text-7xl lg:text-8xl" words="spatz 2" />
+					<WordsPullUp class="text-6xl lg:text-8xl" words="Maigewan CMS" />
 				</div>
 			</div>
 
 			<div class="">
 				<div class="animate-subtitle mt-5 text-xl font-thin text-muted-foreground lg:text-2xl">
-					<div class="font-base text-2xl text-orange-400">
-						The ultimate <span class="">"do-everything"</span> template for svelte & sveltekit.
+					<div class="font-base text-2xl text-primary">
+						专业的<span class="font-bold">站群SEO优化</span>系统
 					</div>
 					<div class="pt-3 text-lg">
-						this time with svelte-animations, superforms, and shadcn.
+						深耕Bing、百度、谷歌优化多年,助力您的网站快速登顶搜索引擎
+					</div>
+					<div class="mt-3 flex flex-wrap gap-2 text-sm">
+						<span class="rounded-full bg-primary/10 px-3 py-1 text-primary">丰富模板</span>
+						<span class="rounded-full bg-primary/10 px-3 py-1 text-primary">SEO标签自定义</span>
+						<span class="rounded-full bg-primary/10 px-3 py-1 text-primary">多搜索引擎优化</span>
 					</div>
 					<div class="mt-3 text-xs font-thin text-muted-foreground">
-						an updated version of <a
-							href="https://spatz.engage-dev.com"
-							class="text-foreground underline">spatz</a
+						作者: <a
+							href="https://github.com/maigewan"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="text-foreground underline">@maigewan</a
 						>
 					</div>
 				</div>
@@ -121,7 +128,7 @@
 			<div class="animate-buttons mx-auto mt-5 flex w-full items-center gap-2 md:max-w-lg">
 				<a href="/auth/register" class="group/bookingsButton w-full">
 					<Button size="lg" class="flex w-full items-center gap-2">
-						<div class="text-lg lowercase">get started</div>
+						<div class="text-lg">开始使用</div>
 						<Icon
 							icon="material-symbols:rocket-launch"
 							class="h-5 w-5 transition-transform duration-300 lg:group-hover/bookingsButton:rotate-45"
@@ -131,7 +138,7 @@
 
 				<a href="/auth/login" class="group/bookingsButton w-full">
 					<Button size="lg" variant="outline" class="flex w-full items-center gap-2">
-						<div class="text-lg lowercase">login</div>
+						<div class="text-lg">登录</div>
 						<Icon
 							icon="mdi:arrow-right"
 							class="h-5 w-5 transition-transform duration-300 lg:group-hover/bookingsButton:translate-x-1"

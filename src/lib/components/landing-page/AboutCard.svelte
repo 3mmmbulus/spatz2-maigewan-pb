@@ -128,18 +128,16 @@
 		>
 			<div class="flex w-full max-w-sm flex-col gap-5 p-5 text-center md:max-w-sm">
 				<div class="text-lg font-thin italic text-foreground/80 md:text-xl">
-					"I built spatz to help connect all the dots when building new applications. This helps me
-					build fast. I invite you to use and improve this project. Feedback and pull requests are
-					welcome, and appreciated."
+					"Maigewan CMS 致力于为站长提供最专业的SEO优化解决方案。我们深耕搜索引擎优化多年,精通Bing、百度、谷歌等主流搜索引擎的排名算法。丰富的CMS模板、强大的SEO自定义功能,让您的网站轻松获得更好的排名。"
 				</div>
 				<div class="flex items-center justify-center gap-5">
-					<a href="https://cook.engage-dev.com">
+					<a href="/auth/register">
 						<Button
 							size="lg"
-							class="group/readMoreButton flex w-full items-center gap-2 uppercase md:w-fit"
+							class="group/readMoreButton flex w-full items-center gap-2 md:w-fit"
 							variant="outline"
 						>
-							<div class="lowercase">My Homepage</div>
+							<div>开始使用</div>
 							<Icon
 								icon="mdi:arrow-right"
 								class="h-5 w-5 transition-transform duration-300 lg:group-hover/readMoreButton:translate-x-1"
@@ -155,13 +153,13 @@
 				class="invisible relative mx-auto flex h-52 w-52 items-center justify-center rounded-lg transition-opacity duration-500 ease-in-out md:h-64 md:w-64"
 				bind:this={imageContainer}
 			>
-				<a href="https://github.com/engageintellect" class="">
+				<a href="https://github.com/maigewan" class="">
 					<img
-						src={`https://github.com/engageintellect.png`}
-						alt="@engageintellect"
+						src={`https://github.com/maigewan.png`}
+						alt="@maigewan"
 						class="z-10 h-full w-full rounded-full object-cover object-top shadow transition-shadow duration-300 hover:shadow-lg"
 					/>
-					<div class="mt-2 flex w-full justify-center text-2xl font-thin">@engageintellect</div>
+					<div class="mt-2 flex w-full justify-center text-2xl font-thin">@maigewan</div>
 				</a>
 			</div>
 		</div>

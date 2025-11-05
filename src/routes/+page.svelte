@@ -12,10 +12,10 @@
 </script>
 
 <svelte:head>
-	<title>Home : {siteInfo.name}</title>
+	<title>{siteInfo.name} - 专业的SEO站群优化系统</title>
 	<meta
 		name="description"
-		content={`${siteInfo.name} is dedicated to providing top-notch services to our clients.`}
+		content="Maigewan CMS - 专业的站群优化系统,支持Bing、百度、谷歌SEO优化,丰富的模板和自定义SEO标签功能。"
 	/>
 </svelte:head>
 
