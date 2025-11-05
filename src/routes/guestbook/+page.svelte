@@ -140,18 +140,6 @@
 				}
 			);
 
-			// Animate text on mount
-			gsap.fromTo(
-				'.text-3xl',
-				{ opacity: 0, y: 50 },
-				{
-					opacity: 1,
-					y: 0,
-					duration: 1,
-					ease: 'power4.out'
-				}
-			);
-
 			// Apply lazy loading to posts
 			document.querySelectorAll('.post-wrapper').forEach((el) => {
 				lazyLoad(el as HTMLElement);
