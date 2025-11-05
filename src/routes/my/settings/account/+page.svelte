@@ -22,7 +22,7 @@
 					await invalidateAll();
 					toast.set({
 						show: true,
-						message: 'Email updated successfully',
+						message: '邮箱更新成功',
 						type: 'bg-success',
 						icon: 'mdi:check'
 					});
@@ -32,7 +32,7 @@
 					await invalidateAll();
 					toast.set({
 						show: true,
-						message: 'Email update failed',
+						message: '邮箱更新失败',
 						type: 'error',
 						icon: 'mdi:alert-circle'
 					});
@@ -53,7 +53,7 @@
 					await invalidateAll();
 					toast.set({
 						show: true,
-						message: 'Profile updated successfully',
+						message: '个人资料更新成功',
 						type: 'bg-success text-success-foreground',
 						icon: 'mdi:check'
 					});
@@ -64,7 +64,7 @@
 					await invalidateAll();
 					toast.set({
 						show: true,
-						message: 'Profile update failed',
+						message: '个人资料更新失败',
 						type: 'bg-destructive text-destructive-foreground',
 						icon: 'mdi:alert-circle'
 					});
@@ -80,8 +80,8 @@
 
 <div class="flex h-full w-full flex-col space-y-12">
 	<div class="w-full">
-		<div class="mb-5 text-2xl font-bold lowercase sm:text-3xl md:text-5xl">account settings</div>
-		<div class="text-xl md:text-2xl">change email</div>
+		<div class="mb-5 text-2xl font-bold lowercase sm:text-3xl md:text-5xl">账户设置</div>
+		<div class="text-xl md:text-2xl">更改邮箱</div>
 
 		<!-- <Modal label="change-email" checked={emailModalOpen}> -->
 		<form
@@ -106,13 +106,13 @@
 				disabled={loading}
 			>
 				<Icon icon="material-symbols:sync" class={`${loading ? 'animate-spin' : ''}h-5 w-5`} />
-				<div>update email</div>
+				<div>更新邮箱</div>
 			</Button>
 		</form>
 	</div>
 
 	<div class="w-full">
-		<div class="text-xl md:text-2xl">change username</div>
+		<div class="text-xl md:text-2xl">更改用户名</div>
 		<form
 			action="?/updateUsername"
 			method="POST"
@@ -139,7 +139,7 @@
 					icon={`${loading ? 'material-symbols:sync' : 'material-symbols:save'}`}
 					class={`${loading ? 'animate-spin' : ''}h-5 w-5`}
 				/>
-				<div>save username</div>
+				<div>保存用户名</div>
 			</Button>
 		</form>
 	</div>

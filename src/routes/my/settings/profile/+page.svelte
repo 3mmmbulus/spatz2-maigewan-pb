@@ -37,12 +37,12 @@
 		return async ({ result }: any) => {
 			switch (result.type) {
 				case 'success':
-					toast.success(`Job title updated.`, {});
+					toast.success(`职位已更新。`, {});
 
 					await invalidateAll();
 					break;
 				case 'error':
-					toast.error('Failed to update job title.', {});
+					toast.error('更新职位失败。', {});
 					break;
 				default:
 					await applyAction(result);
@@ -65,10 +65,10 @@
 		enctype="multipart/form-data"
 		use:enhance={submitUpdateProfile}
 	>
-		<div class="text-2xl font-bold lowercase sm:text-3xl md:text-5xl">Update Profile</div>
+		<div class="text-2xl font-bold lowercase sm:text-3xl md:text-5xl">更新个人资料</div>
 		<div class="w-full max-w-lg pt-5">
 			<!-- <label for="avatar" class="label  pb-1"> -->
-			<!-- <span class="label-text">Profile Picture</span> -->
+			<!-- <span class="label-text">头像</span> -->
 			<!-- </label> -->
 			<label
 				for="avatar"
@@ -122,7 +122,7 @@
 			value={form?.data?.name ?? data?.user?.name}
 			disabled={loading}
 			errors={form?.errors?.name}
-			placeholder="Name"
+			placeholder="姓名"
 		/>
 
 		<Input
@@ -130,7 +130,7 @@
 			value={form?.data?.job_title ?? data?.user?.job_title}
 			disabled={loading}
 			errors={form?.errors?.job_title}
-			placeholder="Title"
+			placeholder="职位"
 		/>
 
 		<Input
@@ -138,7 +138,7 @@
 			value={form?.data?.website ?? data?.user?.website}
 			disabled={loading}
 			errors={form?.errors?.website}
-			placeholder="Title"
+			placeholder="网站"
 		/>
 
 		<div class="w-full max-w-lg pt-2">
@@ -150,13 +150,13 @@
 					variant="success"
 				>
 					<Icon icon="material-symbols:sync" class={`${loading ? 'animate-spin' : ''} h-5 w-5`} />
-					<div>update</div>
+					<div>更新</div>
 				</Button>
 
 				<div class="w-full md:w-fit">
 					<a href={`/users/${$currentUser.id}`} class="w-full">
 						<Button variant="outline" class="flex w-full items-center gap-2 lowercase md:w-fit">
-							<div>profile</div>
+							<div>个人资料</div>
 							<Icon icon="mdi:arrow-right" class={`${loading ? 'animate-spin' : ''} h-5 w-5`} />
 						</Button>
 					</a>
