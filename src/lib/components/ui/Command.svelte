@@ -50,11 +50,6 @@
 				<span>Guestbook</span>
 			</Command.Item>
 
-			<Command.Item onSelect={() => handleSelect('AI Agent', '/ai/agent')}>
-				<Icon icon="hugeicons:ai-brain-03" class="mr-2 h-4 w-4" />
-				<span>AI Agent</span>
-			</Command.Item>
-
 			<Command.Item
 				onSelect={() => (document.getElementById('logout-form') as HTMLFormElement)?.submit()}
 			>

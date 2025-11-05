@@ -28,7 +28,6 @@
 	const app = [
 		{ title: '留言本', url: '/guestbook', icon: 'ion:chatbox-outline' },
 		{ title: '用户目录', url: '/users', icon: 'mdi:account-group-outline' },
-		{ title: 'AI 助手', url: '/ai/agent', icon: 'tabler:brain' },
 		{ title: '比特币预测', url: '/bitcoin-prediction', icon: 'akar-icons:bitcoin-fill' },
 		{ title: '数据库管理', url: PUBLIC_POCKETBASE_ADMIN, icon: 'tabler:brain' }
 	];

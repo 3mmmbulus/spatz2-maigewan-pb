@@ -26,11 +26,6 @@
 			title: 'image',
 			href: '/ai/image-gen',
 			icon: 'material-symbols:add-photo-alternate-outline'
-		},
-		{
-			title: 'agent',
-			href: '/ai/agent',
-			icon: 'mdi:robot-outline'
 		}
 	];
 
