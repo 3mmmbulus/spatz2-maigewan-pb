@@ -16,7 +16,11 @@ RUN pnpm install --frozen-lockfile
 # 复制所有源代码
 COPY . .
 
-# 构建应用
+# 设置构建时的环境变量
+ENV PUBLIC_POCKETBASE_URL=https://api.maigewan.com/api/
+ENV PUBLIC_BASE_URL=https://admin.maigewan.com
+
+# 构建应用 (不再需要 OPENAI_API_KEY 占位符,因为使用了延迟初始化)
 RUN pnpm run build
 
 # 生产阶段
@@ -35,10 +39,10 @@ COPY --from=builder /app/node_modules ./node_modules
 
 # 设置环境变量
 ENV NODE_ENV=production
-ENV PORT=3000
+ENV PORT=8080
 
-# 暴露端口
-EXPOSE 3000
+# 暴露端口 (Cloud Run 使用 8080)
+EXPOSE 8080
 
 # 启动应用
 CMD ["node", "build/index.js"]
