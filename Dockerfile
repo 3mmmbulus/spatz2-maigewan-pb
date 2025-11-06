@@ -17,16 +17,16 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 
 # PUBLIC_* 变量需要在构建时设置
-# 通过 gcloud run deploy --build-env-vars 传入
-ARG PUBLIC_POCKETBASE_URL
-ARG PUBLIC_POCKETBASE_ADMIN
-ARG PUBLIC_BASE_URL
-ARG PUBLIC_GITHUB_PROFILE
-ARG PUBLIC_REPOSITORY_URL
-ARG PUBLIC_DOCS_URL
-ARG PUBLIC_GITHUB_STARS_URL
-ARG PUBLIC_OPENAI_MODEL
-ARG PUBLIC_BTC_DONATION_ADDRESS
+# 可以通过 gcloud run deploy --build-env-vars 传入,或使用下面的默认值
+ARG PUBLIC_POCKETBASE_URL=https://api.maigewan.com/
+ARG PUBLIC_POCKETBASE_ADMIN=https://api.maigewan.com/_/
+ARG PUBLIC_BASE_URL=https://maigewan.com/
+ARG PUBLIC_GITHUB_PROFILE=https://github.com/yourusername
+ARG PUBLIC_REPOSITORY_URL=https://github.com/yourusername/yourrepo
+ARG PUBLIC_DOCS_URL=https://github.com/yourusername/yourrepo/blob/main/README.md
+ARG PUBLIC_GITHUB_STARS_URL=https://api.github.com/repos/yourusername/yourrepo
+ARG PUBLIC_OPENAI_MODEL=gpt-3.5-turbo
+ARG PUBLIC_BTC_DONATION_ADDRESS=1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
 
 ENV PUBLIC_POCKETBASE_URL=$PUBLIC_POCKETBASE_URL
 ENV PUBLIC_POCKETBASE_ADMIN=$PUBLIC_POCKETBASE_ADMIN
