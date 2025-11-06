@@ -16,9 +16,8 @@ RUN pnpm install --frozen-lockfile
 # 复制所有源代码
 COPY . .
 
-# 注意:PUBLIC_* 开头的环境变量需要在构建时设置
-# 这些值会被打包进客户端代码中
-# 在 Cloud Run 部署时通过 --build-env-vars 参数传入
+# PUBLIC_* 变量需要在构建时设置
+# 通过 gcloud run deploy --build-env-vars 传入
 ARG PUBLIC_POCKETBASE_URL
 ARG PUBLIC_POCKETBASE_ADMIN
 ARG PUBLIC_BASE_URL
