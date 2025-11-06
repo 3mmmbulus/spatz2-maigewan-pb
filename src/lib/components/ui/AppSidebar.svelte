@@ -13,18 +13,21 @@
 
 	const { notifications }: any = $props();
 
-	// Menu items
-	const user = [
+	// 检查当前用户是否为管理员
+	const isAdmin = $derived($currentUser?.role === 'admin');
+
+	// Menu items - 使用 $derived 确保响应式更新
+	const user = $derived([
 		{
 			title: '通知',
-			url: `/notifications/${$currentUser.id}`,
+			url: `/notifications/${$currentUser?.id || ''}`,
 			icon: 'material-symbols:notifications'
 		},
 		{ title: '个人资料', url: '/my/settings/profile', icon: 'mdi:account' },
 		{ title: '账户设置', url: '/my/settings/account', icon: 'mdi:settings' },
 		{ title: '安全设置', url: '/my/settings/security', icon: 'material-symbols:lock-outline' },
 		{ title: '登录日志', url: '/my/login-logs', icon: 'material-symbols:history' }
-	];
+	]);
 
 	const app = [
 		{ title: '我的授权', url: '/my/licenses', icon: 'mdi:key-variant' },
@@ -32,6 +35,11 @@
 		{ title: '用户目录', url: '/users', icon: 'mdi:account-group-outline' },
 		{ title: '比特币预测', url: '/bitcoin-prediction', icon: 'akar-icons:bitcoin-fill' },
 		{ title: '数据库管理', url: PUBLIC_POCKETBASE_ADMIN, icon: 'tabler:brain' }
+	];
+
+	// 管理员菜单项
+	const admin = [
+		{ title: '管理用户', url: '/admin/users', icon: 'material-symbols:supervisor-account' }
 	];
 
 	const repo = [
@@ -49,19 +57,20 @@
 	const { setOpenMobile } = useSidebar();
 </script>
 
-<Sidebar.Root class="z-50">
-	<Sidebar.Header class="">
-		<div class="rounded bg-secondary p-2">
-			<div class="p-2">
-				<div class="flex w-full items-start gap-2">
-					<div class="relative">
-						<a
-							onclick={() => setOpenMobile(false)}
-							href={`/users/${$currentUser.id}`}
-							data-sveltekit-preload-data="hover"
-						>
-							<Avatar />
-						</a>
+{#if $currentUser}
+	<Sidebar.Root class="z-50">
+		<Sidebar.Header class="">
+			<div class="rounded bg-secondary p-2">
+				<div class="p-2">
+					<div class="flex w-full items-start gap-2">
+						<div class="relative">
+							<a
+								onclick={() => setOpenMobile(false)}
+								href={`/users/${$currentUser.id}`}
+								data-sveltekit-preload-data="hover"
+							>
+								<Avatar />
+							</a>
 						{#if notifications > 0}
 							<a
 								onclick={() => setOpenMobile(false)}
@@ -166,6 +175,33 @@
 			</Sidebar.GroupContent>
 		</Sidebar.Group>
 
+		{#if isAdmin}
+			<Sidebar.Group>
+				<Sidebar.GroupLabel>管理员</Sidebar.GroupLabel>
+				<Sidebar.GroupContent>
+					<Sidebar.Menu>
+						{#each admin as item (item.title)}
+							<Sidebar.MenuItem class={getClass(item.url)}>
+								<Sidebar.MenuButton>
+									{#snippet child({ props })}
+										<a
+											onclick={() => setOpenMobile(false)}
+											data-sveltekit-preload-data="hover"
+											href={item.url}
+											{...props}
+										>
+											<Icon icon={item.icon} class="" />
+											<span>{item.title}</span>
+										</a>
+									{/snippet}
+								</Sidebar.MenuButton>
+							</Sidebar.MenuItem>
+						{/each}
+					</Sidebar.Menu>
+				</Sidebar.GroupContent>
+			</Sidebar.Group>
+		{/if}
+
 		<Sidebar.Group>
 			<Sidebar.GroupLabel>项目</Sidebar.GroupLabel>
 			<Sidebar.GroupContent>
@@ -203,3 +239,4 @@
 		</div>
 	</Sidebar.Footer>
 </Sidebar.Root>
+{/if}

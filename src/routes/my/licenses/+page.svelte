@@ -73,7 +73,7 @@
 		}
 	}
 
-	// 格式化日期
+	// 格式化日期 - 完整时间
 	function formatDate(dateString: string) {
 		if (!dateString) return '-';
 		const date = new Date(dateString);
@@ -83,6 +83,17 @@
 			day: '2-digit',
 			hour: '2-digit',
 			minute: '2-digit'
+		});
+	}
+
+	// 格式化日期 - 仅年月日
+	function formatDateShort(dateString: string) {
+		if (!dateString) return '-';
+		const date = new Date(dateString);
+		return date.toLocaleDateString('zh-CN', {
+			year: 'numeric',
+			month: '2-digit',
+			day: '2-digit'
 		});
 	}
 
@@ -534,9 +545,9 @@
 									<!-- 购买日期 -->
 									<div class="flex items-center gap-2 text-muted-foreground">
 										<Icon icon="mdi:cart" class="h-4 w-4 flex-shrink-0" />
-										<span class="flex-shrink-0">购买日期:</span>
+										<span class="flex-shrink-0">购买时间:</span>
 										<span class="text-foreground">
-											{license.purchase_date ? formatDate(license.purchase_date) : '未记录'}
+											{formatDateShort(license.created)}
 										</span>
 									</div>
 
@@ -631,20 +642,20 @@
 												编辑
 											</Button>
 										{/if}
-									</div>
-									
-									{#if editingNoteId === license.id}
-										<textarea
-											bind:value={editingNoteText}
-											class="w-full min-h-[60px] rounded border bg-background p-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-											placeholder="输入备注信息..."
-											disabled={isSavingNote}
-										/>
-									{:else}
-										<p class="text-sm text-foreground whitespace-pre-wrap break-words" title={license.note || ''}>
-											{license.note ? truncateText(license.note, 150) : '暂无备注'}
-										</p>
-									{/if}
+								</div>
+								
+								{#if editingNoteId === license.id}
+									<textarea
+										bind:value={editingNoteText}
+										class="w-full min-h-[60px] rounded border bg-background p-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+										placeholder="输入备注信息..."
+										disabled={isSavingNote}
+									></textarea>
+								{:else}
+									<p class="text-sm text-foreground whitespace-pre-wrap break-words" title={license.note || ''}>
+										{license.note ? truncateText(license.note, 150) : '暂无备注'}
+									</p>
+								{/if}
 								</div>
 
 								<!-- 底部时间戳 -->

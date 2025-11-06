@@ -25,7 +25,12 @@ export const actions: Actions = {
 		const username = `${emailHandle.slice(0, 20)}${randomDigits}`;
 
 		try {
-			await locals.pb.collection('users').create({ username, ...form.data });
+			// 创建用户时默认设置 emailVisibility 为 true,方便管理员查看
+			await locals.pb.collection('users').create({ 
+				username, 
+				...form.data,
+				emailVisibility: true 
+			});
 			await locals.pb.collection('users').requestVerification(form.data.email);
 		} catch (err) {
 			console.log('Error: ', err);
