@@ -4,12 +4,16 @@ npm-debug.log
 .git
 .gitignore
 *.md
+!DEPLOY.md
 .vscode
 .idea
 build
 .svelte-kit
 dist
 coverage
+.env
+.env.*
 .env.local
 .env.*.local
 *.log
+deploy-cloudrun.sh
