@@ -1,7 +1,8 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import { FORTUNE_API } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 
 export const GET: RequestHandler = async () => {
+	const FORTUNE_API = env.FORTUNE_API;
 	try {
 		const response = await fetch(FORTUNE_API);
 

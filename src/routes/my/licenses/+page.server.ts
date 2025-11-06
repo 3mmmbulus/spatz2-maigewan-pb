@@ -1,6 +1,6 @@
 import type { PageServerLoad } from './$types';
 import { redirect } from '@sveltejs/kit';
-import { USDT_TRC20_ADDRESS, USDT_ERC20_ADDRESS, LICENSE_PRICE } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.pb.authStore.isValid || !locals.pb.authStore.record) {
@@ -22,9 +22,9 @@ export const load: PageServerLoad = async ({ locals }) => {
 		return {
 			licenses,
 			payment: {
-				trc20Address: USDT_TRC20_ADDRESS || '',
-				erc20Address: USDT_ERC20_ADDRESS || '',
-				price: LICENSE_PRICE || '700'
+				trc20Address: env.USDT_TRC20_ADDRESS || '',
+				erc20Address: env.USDT_ERC20_ADDRESS || '',
+				price: env.LICENSE_PRICE || '700'
 			}
 		};
 	} catch (err) {
