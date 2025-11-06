@@ -22,7 +22,8 @@
 		},
 		{ title: '个人资料', url: '/my/settings/profile', icon: 'mdi:account' },
 		{ title: '账户设置', url: '/my/settings/account', icon: 'mdi:settings' },
-		{ title: '安全设置', url: '/my/settings/security', icon: 'material-symbols:lock-outline' }
+		{ title: '安全设置', url: '/my/settings/security', icon: 'material-symbols:lock-outline' },
+		{ title: '登录日志', url: '/my/login-logs', icon: 'material-symbols:history' }
 	];
 
 	const app = [

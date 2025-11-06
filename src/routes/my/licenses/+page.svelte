@@ -37,6 +37,9 @@
 	let purchaseDialogOpen = $state(false);
 	let paymentMethod = $state<'TRC20' | 'ERC20'>('TRC20');
 	let copiedAddress = $state(false);
+	let editingNoteId = $state<string | null>(null);
+	let editingNoteText = $state('');
+	let isSavingNote = $state(false);
 
 	// 状态颜色映射
 	function getStatusVariant(status: string) {
@@ -183,6 +186,57 @@
 		const middle = address.substring(4, address.length - 4);
 		const end = address.substring(address.length - 4);
 		return { start, middle, end };
+	}
+
+	// 开始编辑备注
+	function startEditNote(license: any) {
+		editingNoteId = license.id;
+		editingNoteText = license.note || '';
+	}
+
+	// 取消编辑备注
+	function cancelEditNote() {
+		editingNoteId = null;
+		editingNoteText = '';
+	}
+
+	// 保存备注
+	async function saveNote(licenseId: string) {
+		if (isSavingNote) return;
+		
+		isSavingNote = true;
+		
+		try {
+			// 更新备注
+			await pb.collection('maigewan_licenses').update(licenseId, {
+				note: editingNoteText.trim()
+			});
+			
+			// 重新获取这一条授权数据
+			const updatedLicense = await pb.collection('maigewan_licenses').getOne(licenseId);
+			
+			// 更新列表中的数据
+			const licenseIndex = data.licenses.findIndex((l: any) => l.id === licenseId);
+			if (licenseIndex !== -1) {
+				data.licenses[licenseIndex] = updatedLicense;
+				data.licenses = data.licenses; // 触发响应式更新
+			}
+			
+			toast.success('备注已更新');
+			editingNoteId = null;
+			editingNoteText = '';
+		} catch (err: any) {
+			console.error('保存备注失败:', err);
+			toast.error(err.message || '保存失败，请稍后重试');
+		} finally {
+			isSavingNote = false;
+		}
+	}
+
+	// 截断长文本
+	function truncateText(text: string, maxLength: number = 100): string {
+		if (!text || text.length <= maxLength) return text;
+		return text.substring(0, maxLength) + '...';
 	}
 
 	// 过滤和排序授权
@@ -532,15 +586,66 @@
 								</div>
 
 								<!-- 备注 -->
-								{#if license.note}
-									<div class="rounded border border-muted bg-muted/30 p-3">
-										<div class="mb-1 flex items-center gap-1 text-xs text-muted-foreground">
+								<div class="rounded border border-muted bg-muted/30 p-3">
+									<div class="mb-1 flex items-center justify-between gap-2">
+										<div class="flex items-center gap-1 text-xs text-muted-foreground">
 											<Icon icon="mdi:note-text" class="h-3 w-3" />
 											<span>备注:</span>
 										</div>
-										<p class="text-sm text-foreground">{license.note}</p>
+										{#if editingNoteId === license.id}
+											<div class="flex items-center gap-1">
+												<Button
+													size="sm"
+													variant="ghost"
+													class="h-6 px-2 text-xs"
+													onclick={cancelEditNote}
+													disabled={isSavingNote}
+												>
+													<Icon icon="mdi:close" class="h-3 w-3 mr-1" />
+													取消
+												</Button>
+												<Button
+													size="sm"
+													variant="default"
+													class="h-6 px-2 text-xs"
+													onclick={() => saveNote(license.id)}
+													disabled={isSavingNote}
+												>
+													{#if isSavingNote}
+														<Icon icon="mdi:loading" class="h-3 w-3 mr-1 animate-spin" />
+														保存中...
+													{:else}
+														<Icon icon="mdi:check" class="h-3 w-3 mr-1" />
+														保存
+													{/if}
+												</Button>
+											</div>
+										{:else}
+											<Button
+												size="sm"
+												variant="ghost"
+												class="h-6 px-2 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+												onclick={() => startEditNote(license)}
+											>
+												<Icon icon="mdi:pencil" class="h-3 w-3 mr-1" />
+												编辑
+											</Button>
+										{/if}
 									</div>
-								{/if}
+									
+									{#if editingNoteId === license.id}
+										<textarea
+											bind:value={editingNoteText}
+											class="w-full min-h-[60px] rounded border bg-background p-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+											placeholder="输入备注信息..."
+											disabled={isSavingNote}
+										/>
+									{:else}
+										<p class="text-sm text-foreground whitespace-pre-wrap break-words" title={license.note || ''}>
+											{license.note ? truncateText(license.note, 150) : '暂无备注'}
+										</p>
+									{/if}
+								</div>
 
 								<!-- 底部时间戳 -->
 								<div class="flex items-center gap-4 border-t pt-3 text-xs text-muted-foreground">
@@ -604,9 +709,9 @@
 						{filter ? '尝试使用其他关键词搜索' : '您目前还没有任何授权许可证'}
 					</p>
 					{#if !filter}
-						<Button href="/contact" variant="default">
-							<Icon icon="mdi:cart" class="mr-2 h-4 w-4" />
-							购买授权
+						<Button href="https://t.me/maigewan" target="_blank" variant="default">
+							<Icon icon="mdi:telegram" class="mr-2 h-4 w-4" />
+							联系作者
 						</Button>
 					{/if}
 				</div>
