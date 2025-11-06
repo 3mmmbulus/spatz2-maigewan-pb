@@ -3,19 +3,22 @@
 	import { fade } from "svelte/transition";
 	import { cn } from "$lib/utils.js";
 
-	type $$Props = AlertDialogPrimitive.OverlayProps;
+	interface Props extends AlertDialogPrimitive.OverlayProps {
+		transition?: typeof fade;
+		transitionConfig?: { duration: number };
+	}
 
-	let className: $$Props["class"] = undefined;
-	export let transition: $$Props["transition"] = fade;
-	export let transitionConfig: $$Props["transitionConfig"] = {
-		duration: 150,
-	};
-	export { className as class };
+	let {
+		class: className,
+		transition = fade,
+		transitionConfig = { duration: 150 },
+		...restProps
+	}: Props = $props();
 </script>
 
 <AlertDialogPrimitive.Overlay
 	{transition}
 	{transitionConfig}
-	class={cn("bg-background/80 fixed inset-0 z-50 backdrop-blur-sm ", className)}
-	{...$$restProps}
+	class={cn("bg-background/80 fixed inset-0 z-40 backdrop-blur-sm pointer-events-none", className)}
+	{...restProps}
 />

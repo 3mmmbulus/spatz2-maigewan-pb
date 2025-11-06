@@ -3,23 +3,22 @@
 	import { buttonVariants } from "$lib/components/ui/button/index.js";
 	import { cn } from "$lib/utils.js";
 
-	type $$Props = AlertDialogPrimitive.ActionProps;
-
-	let className: $$Props["class"] = undefined;
-	export { className as class };
-
 	interface Props extends AlertDialogPrimitive.ActionProps {
 		children?: import('svelte').Snippet;
 	}
 
-	let { children, ...restProps }: Props = $props();
+	let { children, class: className, ...restProps }: Props = $props();
 </script>
 
 <AlertDialogPrimitive.Action
-	class={cn(buttonVariants(), className)}
+	class={cn(buttonVariants(), "pointer-events-auto cursor-pointer", className)}
 	{...restProps}
 >
 	{#snippet child({ props })}
-		{@render children?.()}
+		<button {...props} type="button">
+			{@render children?.()}
+		</button>
 	{/snippet}
 </AlertDialogPrimitive.Action>
+
+

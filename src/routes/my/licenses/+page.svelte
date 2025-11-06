@@ -12,8 +12,11 @@
 	import ScrollIndicator from '$lib/components/ui/ScrollIndicator.svelte';
 	import ScrollToTopButton from '$lib/components/ui/ScrollToTopButton.svelte';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
+	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import { pb } from '$lib/pocketbase';
 	import { toast } from 'svelte-sonner';
+	import trc20QR from '$lib/assets/images/usdt/trc20.svg';
+	import erc20QR from '$lib/assets/images/usdt/erc20.svg';
 
 	interface Props {
 		data: any;
@@ -30,6 +33,10 @@
 	let resetDialogOpen = $state(false);
 	let selectedLicense = $state<any>(null);
 	let isResetting = $state(false);
+	let resetLicenseIds = $state<Set<string>>(new Set());
+	let purchaseDialogOpen = $state(false);
+	let paymentMethod = $state<'TRC20' | 'ERC20'>('TRC20');
+	let copiedAddress = $state(false);
 
 	// 状态颜色映射
 	function getStatusVariant(status: string) {
@@ -40,6 +47,8 @@
 				return 'destructive';
 			case 'suspended':
 				return 'secondary';
+			case 'prohibit':
+				return 'destructive';
 			default:
 				return 'outline';
 		}
@@ -54,6 +63,8 @@
 				return '已过期';
 			case 'suspended':
 				return '已暂停';
+			case 'prohibit':
+				return '已封禁';
 			default:
 				return status;
 		}
@@ -106,18 +117,37 @@
 		if (!selectedLicense) return;
 		
 		isResetting = true;
+		
 		try {
+			// 执行重置操作
 			await pb.collection('maigewan_licenses').update(selectedLicense.id, {
 				device_id: ''
 			});
 			
-			toast.success('设备ID已重置，您现在可以更换服务器授权');
-			
-			// 更新本地数据
-			const index = data.licenses.findIndex((l: any) => l.id === selectedLicense.id);
-			if (index !== -1) {
-				data.licenses[index].device_id = '';
+			// 重置成功后，只重新获取这一条授权数据
+			try {
+				const updatedLicense = await pb.collection('maigewan_licenses').getOne(selectedLicense.id);
+				
+				// 更新列表中的这一条数据
+				const licenseIndex = data.licenses.findIndex((l: any) => l.id === selectedLicense.id);
+				if (licenseIndex !== -1) {
+					data.licenses[licenseIndex] = updatedLicense;
+					data.licenses = data.licenses; // 触发响应式更新
+				}
+			} catch (fetchErr) {
+				console.error('重新获取授权数据失败:', fetchErr);
+				// 即使重新获取失败，也使用乐观更新
+				const licenseIndex = data.licenses.findIndex((l: any) => l.id === selectedLicense.id);
+				if (licenseIndex !== -1) {
+					data.licenses[licenseIndex].device_id = '';
+				}
 			}
+			
+			// 添加到已重置列表
+			resetLicenseIds.add(selectedLicense.id);
+			resetLicenseIds = resetLicenseIds;
+			
+			toast.success('设备ID已重置，您现在可以更换服务器授权');
 			
 			resetDialogOpen = false;
 			selectedLicense = null;
@@ -127,6 +157,32 @@
 		} finally {
 			isResetting = false;
 		}
+	}
+
+	// 复制钱包地址
+	async function copyWalletAddress() {
+		const address = paymentMethod === 'TRC20' ? data.payment.trc20Address : data.payment.erc20Address;
+		try {
+			await navigator.clipboard.writeText(address);
+			copiedAddress = true;
+			toast.success('地址已复制到剪贴板');
+			setTimeout(() => {
+				copiedAddress = false;
+			}, 2000);
+		} catch (err) {
+			toast.error('复制失败，请手动复制');
+		}
+	}
+
+	// 格式化地址（加粗前后四位）
+	function formatAddress(address: string) {
+		if (!address || address.length < 8) {
+			return { start: address || '', middle: '', end: '' };
+		}
+		const start = address.substring(0, 4);
+		const middle = address.substring(4, address.length - 4);
+		const end = address.substring(address.length - 4);
+		return { start, middle, end };
 	}
 
 	// 过滤和排序授权
@@ -143,6 +199,8 @@
 					return result.filter((l: any) => l.status === 'expired');
 				case 'suspended':
 					return result.filter((l: any) => l.status === 'suspended');
+				case 'prohibit':
+					return result.filter((l: any) => l.status === 'prohibit');
 				case 'all':
 				default:
 					return result;
@@ -296,6 +354,18 @@
 				<div class="flex items-center gap-2">
 					<Button
 						size="sm"
+						variant="default"
+						onclick={() => (purchaseDialogOpen = true)}
+						class="gap-2"
+					>
+						<Icon icon="mdi:cart-plus" class="h-4 w-4" />
+						购买授权
+					</Button>
+					
+					<div class="h-6 w-px bg-border"></div>
+					
+					<Button
+						size="sm"
 						variant={sortOption === 'all' ? 'default' : 'ghost'}
 						onclick={() => (sortOption = 'all')}
 						class="text-xs transition-all duration-300"
@@ -327,6 +397,18 @@
 							class={`${sortOption === 'expired' ? 'text-destructive' : ''} ml-1 h-4 w-4`}
 						/>
 					</Button>
+					<Button
+						size="sm"
+						variant={sortOption === 'prohibit' ? 'default' : 'ghost'}
+						onclick={() => (sortOption = 'prohibit')}
+						class="text-xs transition-all duration-300"
+					>
+						封禁
+						<Icon
+							icon="mdi:cancel"
+							class={`${sortOption === 'prohibit' ? 'text-destructive' : ''} ml-1 h-4 w-4`}
+						/>
+					</Button>
 				</div>
 			</div>
 		</div>
@@ -338,15 +420,15 @@
 					<div
 						class="license-item group relative border-t p-4 transition-all duration-200 hover:bg-secondary/50"
 					>
-						<div class="flex items-start justify-between gap-4">
+							<div class="flex items-start justify-between gap-4">
 							<!-- 左侧:授权信息 -->
 							<div class="flex-1 space-y-4">
 								<!-- 标题行 - 授权码 -->
 								<div class="flex items-center gap-3">
-									<Icon icon="mdi:key-variant" class="h-6 w-6 text-primary" />
-									<div class="flex items-center gap-2">
+									<Icon icon="mdi:key-variant" class="h-6 w-6 flex-shrink-0 text-primary" />
+									<div class="flex min-w-0 flex-1 items-center justify-between gap-2">
 										<code
-											class="rounded bg-muted px-3 py-1.5 font-mono text-sm text-primary"
+											class="max-w-xs truncate rounded bg-muted/30 px-3 py-1.5 font-mono text-sm"
 											title={license.license_key}
 										>
 											{license.license_key}
@@ -354,7 +436,7 @@
 										<Button
 											size="sm"
 											variant="ghost"
-											class="h-8 w-8 p-0 opacity-0 transition-opacity group-hover:opacity-100"
+											class="ml-2 h-8 w-8 flex-shrink-0 p-0 opacity-0 transition-opacity group-hover:opacity-100"
 											onclick={() => copyLicenseKey(license.license_key, license.id)}
 										>
 											{#if copiedId === license.id}
@@ -364,15 +446,17 @@
 											{/if}
 										</Button>
 									</div>
-									<Badge variant={getStatusVariant(license.status)}>
-										{getStatusText(license.status)}
-									</Badge>
-									{#if license.expire_date && isExpiringSoon(license.expire_date)}
-										<Badge variant="outline" class="text-orange-500">
-											<Icon icon="mdi:clock-alert" class="mr-1 h-3 w-3" />
-											即将过期
+									<div class="flex flex-shrink-0 flex-wrap gap-2">
+										<Badge variant={getStatusVariant(license.status)}>
+											{getStatusText(license.status)}
 										</Badge>
-									{/if}
+										{#if license.expire_date && isExpiringSoon(license.expire_date)}
+											<Badge variant="outline" class="text-orange-500">
+												<Icon icon="mdi:clock-alert" class="mr-1 h-3 w-3" />
+												即将过期
+											</Badge>
+										{/if}
+									</div>
 								</div>
 
 								<!-- 详细信息网格 -->
@@ -381,12 +465,10 @@
 									<div class="flex items-center gap-2 text-muted-foreground">
 										<Icon icon="mdi:devices" class="h-4 w-4 flex-shrink-0" />
 										<span class="flex-shrink-0">设备ID:</span>
-										<span class="truncate text-foreground" title={license.device_id || '未绑定'}>
+										<span class="max-w-[180px] truncate rounded bg-muted/30 px-2 py-1 font-mono text-xs text-foreground" title={license.device_id || '未绑定'}>
 											{license.device_id || '未绑定'}
 										</span>
-									</div>
-
-									<!-- 过期时间 -->
+									</div>									<!-- 过期时间 -->
 									<div class="flex items-center gap-2 text-muted-foreground">
 										<Icon icon="mdi:calendar-clock" class="h-4 w-4 flex-shrink-0" />
 										<span class="flex-shrink-0">到期时间:</span>
@@ -491,16 +573,23 @@
 
 							<!-- 右侧:操作按钮 -->
 							<div class="flex flex-col gap-2">
-								<Button
-									size="sm"
-									variant="outline"
-									class="gap-2 whitespace-nowrap"
-									onclick={() => openResetDialog(license)}
-									disabled={!license.device_id}
-								>
-									<Icon icon="mdi:refresh" class="h-4 w-4" />
-									重置设备
-								</Button>
+								{#if resetLicenseIds.has(license.id)}
+									<Button size="sm" variant="outline" class="gap-2 whitespace-nowrap" disabled>
+										<Icon icon="mdi:check-circle" class="h-4 w-4 text-success" />
+										已重置
+									</Button>
+								{:else}
+									<Button
+										size="sm"
+										variant="outline"
+										class="gap-2 whitespace-nowrap"
+										onclick={() => openResetDialog(license)}
+										disabled={!license.device_id || license.status !== 'active'}
+									>
+										<Icon icon="mdi:refresh" class="h-4 w-4" />
+										重置设备
+									</Button>
+								{/if}
 							</div>
 						</div>
 					</div>
@@ -526,6 +615,187 @@
 	</div>
 </div>
 
+<!-- 购买授权弹窗 -->
+<Dialog.Root bind:open={purchaseDialogOpen}>
+	<Dialog.Content class="max-w-md">
+		<Dialog.Header>
+			<Dialog.Title class="flex items-center gap-2 text-2xl">
+				<Icon icon="mdi:cart-plus" class="h-6 w-6 text-primary" />
+				购买授权
+			</Dialog.Title>
+			<Dialog.Description>
+				每台服务器授权 <span class="font-bold text-primary">{data.payment.price} USDT</span> / 1年
+			</Dialog.Description>
+		</Dialog.Header>
+
+		<div class="space-y-4">
+			<!-- 支付方式切换 -->
+			<div class="flex items-center gap-2 rounded-lg border p-1">
+				<Button
+					size="sm"
+					variant={paymentMethod === 'TRC20' ? 'default' : 'ghost'}
+					class="flex-1 transition-all duration-300"
+					onclick={() => (paymentMethod = 'TRC20')}
+				>
+					<Icon icon="mdi:currency-usd" class="mr-1 h-4 w-4" />
+					TRC20
+				</Button>
+				<Button
+					size="sm"
+					variant={paymentMethod === 'ERC20' ? 'default' : 'ghost'}
+					class="flex-1 transition-all duration-300"
+					onclick={() => (paymentMethod = 'ERC20')}
+				>
+					<Icon icon="mdi:ethereum" class="mr-1 h-4 w-4" />
+					ERC20
+				</Button>
+			</div>
+
+			<!-- 二维码和地址信息 - 固定高度容器防止抖动 -->
+			<div class="relative min-h-[480px] overflow-hidden">
+				<!-- TRC20 面板 -->
+				<div
+					class="absolute inset-0 space-y-4 transition-opacity duration-200 {paymentMethod === 'TRC20'
+						? 'pointer-events-auto opacity-100'
+						: 'pointer-events-none opacity-0'}"
+				>
+					<!-- 二维码 -->
+					<div class="flex justify-center rounded-lg border bg-muted/30 p-6">
+						<img src={trc20QR} alt="TRC20 QR Code" class="h-56 w-56 object-contain rounded-lg" />
+					</div>
+
+					<!-- 钱包地址 -->
+					<div class="space-y-2">
+						<div class="flex items-center justify-between">
+							<span class="text-sm font-medium text-muted-foreground"> TRC20 地址: </span>
+							<Button
+								size="sm"
+								variant="ghost"
+								class="h-7 gap-1 px-2"
+								onclick={copyWalletAddress}
+							>
+								{#if copiedAddress && paymentMethod === 'TRC20'}
+									<Icon icon="mdi:check" class="h-3 w-3 text-success" />
+									<span class="text-xs">已复制</span>
+								{:else}
+									<Icon icon="mdi:content-copy" class="h-3 w-3" />
+									<span class="text-xs">复制</span>
+								{/if}
+							</Button>
+						</div>
+
+						{#if data.payment.trc20Address}
+							{@const addr = formatAddress(data.payment.trc20Address)}
+							<div class="break-all rounded-lg border bg-muted/30 p-3 font-mono text-sm">
+								<span class="font-bold text-foreground">{addr.start}</span><span
+									class="text-muted-foreground">{addr.middle}</span
+								><span class="font-bold text-foreground">{addr.end}</span>
+							</div>
+						{:else}
+							<div class="break-all rounded-lg border bg-muted/30 p-3 font-mono text-sm text-muted-foreground">
+								地址未配置
+							</div>
+						{/if}
+
+						<!-- 安全提示 -->
+						<div
+							class="flex items-start gap-2 rounded-lg border border-orange-500/30 bg-orange-50 p-3 dark:bg-orange-950/20"
+						>
+							<Icon
+								icon="mdi:alert"
+								class="mt-0.5 h-4 w-4 flex-shrink-0 text-orange-500"
+							/>
+							<p class="text-xs text-orange-600 dark:text-orange-400">
+								请核对地址前后四位，谨防假冒！
+							</p>
+						</div>
+					</div>
+				</div>
+
+				<!-- ERC20 面板 -->
+				<div
+					class="absolute inset-0 space-y-4 transition-opacity duration-200 {paymentMethod === 'ERC20'
+						? 'pointer-events-auto opacity-100'
+						: 'pointer-events-none opacity-0'}"
+				>
+					<!-- 二维码 -->
+					<div class="flex justify-center rounded-lg border bg-muted/30 p-6">
+						<img src={erc20QR} alt="ERC20 QR Code" class="h-56 w-56 object-contain rounded-lg" />
+					</div>
+
+					<!-- 钱包地址 -->
+					<div class="space-y-2">
+						<div class="flex items-center justify-between">
+							<span class="text-sm font-medium text-muted-foreground"> ERC20 地址: </span>
+							<Button
+								size="sm"
+								variant="ghost"
+								class="h-7 gap-1 px-2"
+								onclick={copyWalletAddress}
+							>
+								{#if copiedAddress && paymentMethod === 'ERC20'}
+									<Icon icon="mdi:check" class="h-3 w-3 text-success" />
+									<span class="text-xs">已复制</span>
+								{:else}
+									<Icon icon="mdi:content-copy" class="h-3 w-3" />
+									<span class="text-xs">复制</span>
+								{/if}
+							</Button>
+						</div>
+
+						{#if data.payment.erc20Address}
+							{@const addr = formatAddress(data.payment.erc20Address)}
+							<div class="break-all rounded-lg border bg-muted/30 p-3 font-mono text-sm">
+								<span class="font-bold text-foreground">{addr.start}</span><span
+									class="text-muted-foreground">{addr.middle}</span
+								><span class="font-bold text-foreground">{addr.end}</span>
+							</div>
+						{:else}
+							<div class="break-all rounded-lg border bg-muted/30 p-3 font-mono text-sm text-muted-foreground">
+								地址未配置
+							</div>
+						{/if}
+
+						<!-- 安全提示 -->
+						<div
+							class="flex items-start gap-2 rounded-lg border border-orange-500/30 bg-orange-50 p-3 dark:bg-orange-950/20"
+						>
+							<Icon
+								icon="mdi:alert"
+								class="mt-0.5 h-4 w-4 flex-shrink-0 text-orange-500"
+							/>
+							<p class="text-xs text-orange-600 dark:text-orange-400">
+								请核对地址前后四位，谨防假冒！
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<Dialog.Footer class="flex-col gap-2 sm:flex-col">
+			<Button
+				variant="default"
+				class="w-full gap-2"
+				onclick={() => {
+					purchaseDialogOpen = false;
+					toast.success('感谢您的支付！我们会尽快处理您的订单');
+				}}
+			>
+				<Icon icon="mdi:check-circle" class="h-4 w-4" />
+				我已完成付款
+			</Button>
+			<Button
+				variant="outline"
+				class="w-full"
+				onclick={() => (purchaseDialogOpen = false)}
+			>
+				取消
+			</Button>
+		</Dialog.Footer>
+	</Dialog.Content>
+</Dialog.Root>
+
 <!-- 重置设备ID确认对话框 -->
 <AlertDialog.Root bind:open={resetDialogOpen}>
 	<AlertDialog.Content>
@@ -539,15 +809,20 @@
 				{#if selectedLicense}
 					<div class="mt-4 rounded-lg border bg-muted/30 p-3">
 						<div class="mb-2 text-xs text-muted-foreground">当前授权信息:</div>
-						<div class="space-y-1 text-sm">
+						<div class="space-y-2 text-sm">
 							<div class="flex items-center gap-2">
-								<Icon icon="mdi:key-variant" class="h-4 w-4" />
-								<code class="text-xs">{selectedLicense.license_key}</code>
+								<Icon icon="mdi:key-variant" class="h-4 w-4 flex-shrink-0" />
+								<code class="max-w-[280px] truncate rounded bg-muted/50 px-2 py-1 font-mono text-xs" title={selectedLicense.license_key}>
+									{selectedLicense.license_key}
+								</code>
 							</div>
 							{#if selectedLicense.device_id}
 								<div class="flex items-center gap-2">
-									<Icon icon="mdi:devices" class="h-4 w-4" />
-									<span class="text-xs text-muted-foreground">设备: {selectedLicense.device_id}</span>
+									<Icon icon="mdi:devices" class="h-4 w-4 flex-shrink-0" />
+									<span class="text-xs text-muted-foreground">设备:</span>
+									<code class="max-w-[220px] truncate rounded bg-muted/50 px-2 py-1 font-mono text-xs text-muted-foreground" title={selectedLicense.device_id}>
+										{selectedLicense.device_id}
+									</code>
 								</div>
 							{/if}
 						</div>
@@ -578,7 +853,13 @@
 </AlertDialog.Root>
 
 {#if showScrollToTop === true}
-	<div class="flex justify-center">
-		<ScrollToTopButton />
-	</div>
+	<button
+		class="scroll-to-top-btn fixed bottom-6 right-6 z-50 rounded-full bg-primary/70 p-3 text-white shadow-lg opacity-0 transition-all duration-300 hover:bg-primary"
+		onclick={() => {
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+		}}
+		aria-label="回到顶部"
+	>
+		<Icon icon="mdi:arrow-up" class="h-5 w-5" />
+	</button>
 {/if}

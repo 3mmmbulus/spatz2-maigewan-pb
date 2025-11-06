@@ -3,23 +3,22 @@
 	import { buttonVariants } from "$lib/components/ui/button/index.js";
 	import { cn } from "$lib/utils.js";
 
-	type $$Props = AlertDialogPrimitive.CancelProps;
-
-	let className: $$Props["class"] = undefined;
-	export { className as class };
-
 	interface Props extends AlertDialogPrimitive.CancelProps {
 		children?: import('svelte').Snippet;
 	}
 
-	let { children, ...restProps }: Props = $props();
+	let { children, class: className, ...restProps }: Props = $props();
 </script>
 
 <AlertDialogPrimitive.Cancel
-	class={cn(buttonVariants({ variant: "outline" }), "mt-2 sm:mt-0", className)}
+	class={cn(buttonVariants({ variant: "outline" }), "mt-2 sm:mt-0 pointer-events-auto cursor-pointer", className)}
 	{...restProps}
 >
 	{#snippet child({ props })}
-		{@render children?.()}
+		<button {...props} type="button">
+			{@render children?.()}
+		</button>
 	{/snippet}
 </AlertDialogPrimitive.Cancel>
+
+
